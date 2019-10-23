@@ -1,7 +1,7 @@
-package king_tokyo_powerup.game.card.effect;
+package king_tokyo_power_up.game.card.effect;
 
-import king_tokyo_powerup.game.monster.Monster;
-import king_tokyo_powerup.game.state.GameState;
+import king_tokyo_power_up.game.monster.Monster;
+import king_tokyo_power_up.game.state.GameState;
 
 /**
  * Event class holds the owner of the event and the general game state.

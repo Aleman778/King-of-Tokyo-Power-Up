@@ -1,4 +1,4 @@
-package king_tokyo_powerup.game;
+package king_tokyo_power_up.game;
 
 import java.util.Random;
 

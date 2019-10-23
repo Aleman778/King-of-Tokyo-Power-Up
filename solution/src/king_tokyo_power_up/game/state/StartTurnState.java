@@ -1,4 +1,4 @@
-package king_tokyo_powerup.game.state;
+package king_tokyo_power_up.game.state;
 
 public class StartTurnState {
 

@@ -1,6 +1,7 @@
-package king_tokyo_powerup;
+package king_tokyo_power_up;
 
-import king_tokyo_powerup.game.DiceRoll;
+import king_tokyo_power_up.game.DiceRoll;
+import king_tokyo_power_up.game.monster.Monster;
 
 import java.util.InputMismatchException;
 import java.util.Random;
@@ -57,8 +58,11 @@ public class KingTokyoPowerUp {
 
     public void sandbox() {
         DiceRoll roll = new DiceRoll(new Random(), 6);
-        System.out.println(roll);
-        System.out.println(roll.getResult());
+        System.out.println(roll + "\n\n");
+        System.out.println(roll.getResult() + "\n\n");
+
+        Monster monster = new Monster("Pumpkin Jack");
+        System.out.println(monster);
     }
 
 

@@ -1,6 +1,6 @@
-package king_tokyo_powerup.game.state;
+package king_tokyo_power_up.game.state;
 
-import king_tokyo_powerup.game.monster.Monster;
+import king_tokyo_power_up.game.monster.Monster;
 
 import java.util.ArrayList;
 
@@ -19,7 +19,7 @@ public class Game {
 
 
     public void setup() {
-        
+
     }
 
 

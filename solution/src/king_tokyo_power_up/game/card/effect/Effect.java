@@ -1,4 +1,4 @@
-package king_tokyo_powerup.game.card.effect;
+package king_tokyo_power_up.game.card.effect;
 
 public abstract class Effect {
     /**
