@@ -1,6 +1,9 @@
 package king_tokyo_powerup;
 
+import king_tokyo_powerup.game.DiceRoll;
+
 import java.util.InputMismatchException;
+import java.util.Random;
 import java.util.Scanner;
 
 /**
@@ -47,8 +50,15 @@ public class KingTokyoPowerUp {
      */
     public static void main(String[] args) {
         application = new KingTokyoPowerUp();
-        application.printLogo();
-        application.mainMenu();
+        //application.printLogo();
+        //application.mainMenu();
+        application.sandbox();
+    }
+
+    public void sandbox() {
+        DiceRoll roll = new DiceRoll(new Random(), 6);
+        System.out.println(roll);
+        System.out.println(roll.getResult());
     }
 
 

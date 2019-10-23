@@ -42,6 +42,7 @@ public enum Dice {
      */
     ENERGY;
 
+
     /**
      * Rolls a dice using the provided random number generator.
      *

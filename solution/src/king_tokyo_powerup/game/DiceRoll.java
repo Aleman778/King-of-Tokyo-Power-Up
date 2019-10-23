@@ -1,5 +1,7 @@
 package king_tokyo_powerup.game;
 
+import king_tokyo_powerup.game.utils.Formatting;
+
 import java.util.Random;
 
 /**
@@ -20,14 +22,15 @@ public class DiceRoll {
 
 
     /**
-     * Creates a new dice roll, to initiate the roll call {@link DiceRoll#rollAll()}.
+     * Creates a new dice roll, the dice are rolled directly on construction.
      * In order to reroll any dice call {@link DiceRoll#reroll(int)}
-     * @param random the random number generator to use
+     * @param random  the random number generator to use
      * @param numDice the number of dice in this roll
      */
     public DiceRoll(Random random, int numDice) {
         this.random = random;
         this.dice = new Dice[numDice];
+        rollAll();
     }
 
 
@@ -44,6 +47,7 @@ public class DiceRoll {
     /**
      * Reroll a specific dice, can be called multiple times if
      * multiple rerolls are requested at once.
+     *
      * @param id the id of the dice starting at 0
      */
     public void reroll(int id) {
@@ -66,14 +70,49 @@ public class DiceRoll {
      * @return the resulting stats of this dice roll
      */
     public DiceResult getResult() {
-        return null;
+        DiceResult result = new DiceResult();
+        for (Dice d : dice) {
+            switch (d) {
+                case ONE:
+                    result.ones++;
+                    break;
+                case TWO:
+                    result.twos++;
+                    break;
+                case THREE:
+                    result.threes++;
+                    break;
+                case HEART:
+                    result.hearts++;
+                    break;
+                case CLAW:
+                    result.claws++;
+                    break;
+                case ENERGY:
+                    result.energies++;
+                    break;
+            }
+        }
+        return result;
     }
 
 
     @Override
     public String toString() {
-        String diceId = "";
+        String diceIds = "";
         String diceRolls = "";
-        return diceId + "\n" + diceRolls;
+        for (int i = 0; i < dice.length; i++) {
+            String diceRoll = dice[i].toString();
+            String diceId = "[" + (i + 1) + "]";
+            int spacing = diceRoll.length() - diceId.length();
+            if (spacing > 0) {
+                diceId += Formatting.getSpaces(Math.abs(spacing));
+            } else if (spacing < 0) {
+                diceRoll += Formatting.getSpaces(Math.abs(spacing));
+            }
+            diceIds += diceId + " ";
+            diceRolls += diceRoll + " ";
+        }
+        return diceIds + "\n" + diceRolls;
     }
 }
