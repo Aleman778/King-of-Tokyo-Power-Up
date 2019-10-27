@@ -2,6 +2,7 @@ package king_tokyo_power_up;
 
 import king_tokyo_power_up.game.DiceRoll;
 import king_tokyo_power_up.game.monster.Monster;
+import king_tokyo_power_up.game.server.GameServer;
 
 import java.util.InputMismatchException;
 import java.util.Random;
@@ -38,11 +39,18 @@ public class KingTokyoPowerUp {
      */
     private static final int MENU_EXIT_GAME = 4;
 
+    /**
+     * Scanner object is used to take user input.
+     */
+    private Scanner scanner;
+
 
     /**
      * Singleton class should not be instantiated outside class.
      */
-    private KingTokyoPowerUp() { }
+    private KingTokyoPowerUp() {
+        scanner = new Scanner(System.in);
+    }
 
 
     /**
@@ -51,9 +59,9 @@ public class KingTokyoPowerUp {
      */
     public static void main(String[] args) {
         application = new KingTokyoPowerUp();
-        //application.printLogo();
-        //application.mainMenu();
-        application.sandbox();
+        application.printLogo();
+        application.mainMenu();
+        //application.sandbox();
     }
 
     public void sandbox() {
@@ -115,7 +123,6 @@ public class KingTokyoPowerUp {
         int option = 0;
         while(true) {
             System.out.print("Main Menu> ");
-            Scanner scanner = new Scanner(System.in);
             try {
                 option = scanner.nextInt();
                 if (option > 0 && option <= 4) {
@@ -127,10 +134,13 @@ public class KingTokyoPowerUp {
                 System.out.println("I couldn't understand what you typed, please enter either 1, 2, 3 or 4");
             }
         }
+        scanner.close();
 
         switch(option) {
             case MENU_HOST_SERVER:
-                System.out.println("Hosting server...");
+                GameServer server = new GameServer();
+                server.configure();
+                server.start();
                 break;
             case MENU_START_CLIENT:
                 System.out.println("Starting client...");

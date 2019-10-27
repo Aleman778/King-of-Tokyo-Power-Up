@@ -1,4 +1,4 @@
-package king_tokyo_power_up.game.utils;
+package king_tokyo_power_up.game.util;
 
 /**
  * Utilities class for formatting strings.

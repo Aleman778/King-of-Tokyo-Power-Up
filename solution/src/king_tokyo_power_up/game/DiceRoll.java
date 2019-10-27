@@ -1,6 +1,6 @@
 package king_tokyo_power_up.game;
 
-import king_tokyo_power_up.game.utils.Formatting;
+import king_tokyo_power_up.game.util.Formatting;
 
 import java.util.Random;
 

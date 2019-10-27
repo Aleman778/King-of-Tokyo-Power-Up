@@ -3,7 +3,8 @@ package king_tokyo_power_up.game.monster;
 import king_tokyo_power_up.game.card.Card;
 import king_tokyo_power_up.game.card.Deck;
 import king_tokyo_power_up.game.card.EvolutionCard;
-import king_tokyo_power_up.game.utils.Formatting;
+import king_tokyo_power_up.game.util.Formatting;
+import king_tokyo_power_up.game.util.Terminal;
 
 import java.util.ArrayList;
 
@@ -38,12 +39,16 @@ public class Monster {
     private String name;
 
     /**
+     * The terminal used to communicate with other monsters.
+     */
+    private Terminal terminal;
+
+    /**
      * The evolution card deck for this monster.
      * The decs are unique to each different monsters.
      * A player can draw from this deck if three hearts are rolled.
      */
     private Deck<EvolutionCard> evolutions;
-
 
     /**
      * The list of cards purchased from the store.
@@ -61,9 +66,6 @@ public class Monster {
     }
 
 
-
-
-
     /**
      * Set the evolution deck to be used by this monster.
      * @param evolutions the evolution deck to set
@@ -75,15 +77,15 @@ public class Monster {
 
     @Override
     public String toString() {
-        String monsterName = name + ": ";
+        String monsterName = name + ":\n";
+        String spacing = Formatting.getSpaces(4);
 
         // Health Bar
-        String healthBar = Formatting.getRepeated(health, '#');
-        healthBar += Formatting.getSpaces(maxHealth - health);
-        healthBar = "health [" + healthBar + "] " + health + "/ " + maxHealth + "\n";
+        String healthBar = Formatting.getRepeated(health, '♥');
+        healthBar += Formatting.getRepeated(maxHealth - health, '♡');
+        healthBar = spacing + "health = " + healthBar + " " + health + "/" + maxHealth + ", ";
 
-        String spacing = Formatting.getSpaces(monsterName.length());
-        String stats = spacing + "energy = " + energy + ", stars = " + stars + "\n";
+        String stats = "energy ⚡ = " + energy + ", stars ★ = " + stars + "\n";
 
         return monsterName + healthBar + stats;
     }
