@@ -46,6 +46,9 @@ public class Deck<T extends Card> {
      * @return return the drawn card
      */
     public T draw() {
+        if (cards.isEmpty())
+            return null;
+
         T card = cards.get(0);
         cards.remove(0);
         return card;
@@ -58,6 +61,9 @@ public class Deck<T extends Card> {
      * @return returned the peeked card.
      */
     public T peek() {
+        if (cards.isEmpty())
+            return null;
+
         return cards.get(0);
     }
 }

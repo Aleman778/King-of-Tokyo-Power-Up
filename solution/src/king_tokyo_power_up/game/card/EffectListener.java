@@ -1,4 +1,4 @@
-package king_tokyo_power_up.game.card.effect;
+package king_tokyo_power_up.game.card;
 
 /**
  * Effects are defined as callbacks to events they can modify a monsters
@@ -6,19 +6,27 @@ package king_tokyo_power_up.game.card.effect;
  * or more different callback functions e.g. beginTurn. For each callback
  * comes an event that holds the necessary information.
  */
-public abstract class Effect {
+public abstract class EffectListener {
     /**
-     * Begin turn event is called at the beginning of each turn
+     * Begin turn event is called at the beginning of each turn.
      * @param event the event
      */
     public void beginTurn(Event event) { }
 
 
     /**
+     * Purchase event is called when a monster is purchasing something.
+     * This can be used to for example provide discount from card effects.
+     * @param event
+     */
+    public void purchase(Event event) { }
+
+
+    /**
      * Event callback is executed at the beginning of each event.
      * @param event the event
      */
-    public void attacked(Event event) { }
+    public void attack(Event event) { }
 
 
     /**

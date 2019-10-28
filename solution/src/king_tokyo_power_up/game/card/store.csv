@@ -14,9 +14,11 @@ Drop from High Altitude;5;Discard;+ 2[Star] and take control of Tokyo if you don
 Eater of the Dead;4;Keep;Gain 3[Star] every time a monster's [Heart] goes to 0.
 Energize;8;Discard;+ 9[Energy]
 Energy Hoarder;3;Keep;You gain 1[Star] for every 6[Energy] you have at the end of your turn.
-Evacuation Orders (x2);7;Discard;All other monsters lose 5[Star].
+Evacuation Orders;7;Discard;All other monsters lose 5[Star].
+Evacuation Orders;7;Discard;All other monsters lose 5[Star].
 Even Bigger;4;Keep;Your maximum [Heart] is increased by 2. Gain 2[Heart] when you get this card.
-Extra Head (x2);7;Keep;You get 1 extra die.
+Extra Head;7;Keep;You get 1 extra die.
+Extra Head;7;Keep;You get 1 extra die.
 Fire Blast;3;Discard;Deal 2 damage to all other monsters.
 Fire Breathing;4;Keep;Your neighbors take 1 extra damage when you deal damage
 Freeze Time;5;Keep;On a turn where you score [1][1][1], you can take another turn with one less die.

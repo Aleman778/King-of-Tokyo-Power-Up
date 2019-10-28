@@ -1,8 +1,6 @@
 package king_tokyo_power_up.game.card;
 
-import king_tokyo_power_up.game.card.effect.Effect;
-
-public class Card {
+public abstract class Card {
     /**
      * The name of this card.
      */
@@ -15,26 +13,20 @@ public class Card {
     private String description;
 
     /**
-     * Discard flag, immediately discards retrieved
-     * cards if flag is set to true, if set to false cards are kept.
-     */
-    private boolean discard;
-
-    /**
-     * The effect of this cards, defines what the card
+     * The effects of this cards, defines what the card
      * actually does functionally similar to the
      * the textual {@link Card#description}.
      */
-    private Effect effect;
+    private EffectListener effect;
 
 
-    public Card() {
-
-    }
-
-
-    @Override
-    public String toString() {
-        return super.toString();
+    /**
+     * Creates a new abstract card.
+     * @param name the name of the card
+     * @param description the description of the card
+     */
+    public Card(String name, String description) {
+        this.name = name;
+        this.description = description;
     }
 }

@@ -41,7 +41,7 @@ public class KingTokyoPowerUpServer {
             this.name = name;
         }
        
-        // search all available cards and return the effect value of an effect
+        // search all available cards and return the effects value of an effects
         public int cardEffect(String effectName) {
             for(int i=0; i<cards.size(); i++) {
                 try {
@@ -109,7 +109,7 @@ public class KingTokyoPowerUpServer {
             this.description = description;
         }       
         public String toString() {
-            return name + ", Cost " + cost + ", " + (discard?"DISCARD":"KEEP") + ", Effect " + description;
+            return name + ", Cost " + cost + ", " + (discard?"DISCARD":"KEEP") + ", EffectListener " + description;
         }
     }
     

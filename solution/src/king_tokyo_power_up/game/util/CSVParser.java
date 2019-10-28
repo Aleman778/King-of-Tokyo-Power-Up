@@ -32,7 +32,7 @@ public class CSVParser {
         String line;
         while ((line = reader.readLine()) != null) {
             for (String value : line.split(delimiter)) {
-                result.add(value);
+                result.add(value.trim());
             }
         }
         return result.toArray(new String[result.size()]);
