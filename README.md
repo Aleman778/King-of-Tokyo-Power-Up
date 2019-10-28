@@ -1,4 +1,5 @@
 # D7032E Home Exam
+### Scenario: King of Tokyo: Power Up
 ```
                                                   %@@@@&&&&*                   
                                     .@@@@@@@@@&@@@@........%@@&                
