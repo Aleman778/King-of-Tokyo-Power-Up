@@ -42,15 +42,14 @@ public class Terminal {
 
 
     /**
-     *
+     * Creates a new terminal with provided name and scanner.
      * Use {@link Terminal#connect(Socket)} to communicate with another machine.
      * @param name the name of this terminal
-     * @param interactive if user input is allowed
+     * @param scanner set scanner if user input is allowed, set null otherwise.
      */
-    public Terminal(String name, boolean interactive) {
+    public Terminal(String name, Scanner scanner) {
         this.name = name;
-        if (interactive)
-            this.scanner = new Scanner(System.in);
+        this.scanner = scanner;
     }
 
 
@@ -73,7 +72,7 @@ public class Terminal {
 
     private String nextLine() {
         if (scanner != null) {
-            while (!scanner.hasNext()) {
+            while (!scanner.hasNextLine()) {
                 // Busy wait until next response
             }
             return scanner.nextLine();
@@ -181,8 +180,17 @@ public class Terminal {
             try {
                 return InetAddress.getByName(answer);
             } catch (UnknownHostException e) {
-                e.printStackTrace();
+                writeString("Not a valid internet address.\n");
             }
         }
+    }
+
+
+    /**
+     * Returns the scanner that is being used by this terminal.
+     * @return the terminal scanner, null if not interactive
+     */
+    public Scanner getScanner() {
+        return scanner;
     }
 }

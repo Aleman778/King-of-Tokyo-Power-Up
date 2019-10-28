@@ -1,8 +1,10 @@
 package king_tokyo_power_up;
 
 import king_tokyo_power_up.game.DiceRoll;
+import king_tokyo_power_up.game.card.DeckFactory;
 import king_tokyo_power_up.game.monster.Monster;
 import king_tokyo_power_up.game.server.GameServer;
+import king_tokyo_power_up.game.util.Terminal;
 
 import java.util.InputMismatchException;
 import java.util.Random;
@@ -42,14 +44,15 @@ public class KingTokyoPowerUp {
     /**
      * Scanner object is used to take user input.
      */
-    private Scanner scanner;
+    private Terminal terminal;
 
 
     /**
      * Singleton class should not be instantiated outside class.
      */
     private KingTokyoPowerUp() {
-        scanner = new Scanner(System.in);
+        Scanner scanner = new Scanner(System.in);
+        terminal = new Terminal("Main Menu", scanner);
     }
 
 
@@ -59,18 +62,13 @@ public class KingTokyoPowerUp {
      */
     public static void main(String[] args) {
         application = new KingTokyoPowerUp();
-        application.printLogo();
-        application.mainMenu();
-        //application.sandbox();
+        //application.printLogo();
+        //application.mainMenu();
+        application.sandbox();
     }
 
     public void sandbox() {
-        DiceRoll roll = new DiceRoll(new Random(), 6);
-        System.out.println(roll + "\n\n");
-        System.out.println(roll.getResult() + "\n\n");
-
-        Monster monster = new Monster("Pumpkin Jack");
-        System.out.println(monster);
+        DeckFactory.createStoreDeck();
     }
 
 
@@ -115,30 +113,21 @@ public class KingTokyoPowerUp {
      * what to do, can either start game as a server, client, bot client or exit.
      */
     public void mainMenu() {
-        System.out.println("MainMenu: Select one option from 1 through 4");
-        System.out.println("\t- 1: Host a new server");
-        System.out.println("\t- 2: Connect to the server");
-        System.out.println("\t- 3: Connect a bot the the server");
-        System.out.println("\t- 4: Exit the game");
-        int option = 0;
-        while(true) {
-            System.out.print("Main Menu> ");
-            try {
-                option = scanner.nextInt();
-                if (option > 0 && option <= 4) {
-                    break;
-                } else {
-                    System.out.println(option + " is not a valid menu option please enter either 1, 2, 3 or 4.");
-                }
-            } catch (InputMismatchException e) {
-                System.out.println("I couldn't understand what you typed, please enter either 1, 2, 3 or 4");
-            }
+        terminal.writeString("MainMenu: Select one option from 1 through 4\n");
+        terminal.writeString("\t- 1: Host a new server\n");
+        terminal.writeString("\t- 2: Connect to the server\n");
+        terminal.writeString("\t- 3: Connect a bot the the server\n");
+        terminal.writeString("\t- 4: Exit the game\n");
+        int option = -1;
+        while (option < 1) {
+            option = terminal.readInt(1, 4, -1, "Not a valid option, please enter either 1, 2, 3 or 4.\n");
+            if (option == -1)
+                terminal.writeString("Please enter something, has to be either 1, 2, 3 or 4.\n");
         }
-        scanner.close();
 
         switch(option) {
             case MENU_HOST_SERVER:
-                GameServer server = new GameServer();
+                GameServer server = new GameServer(terminal.getScanner());
                 server.configure();
                 server.start();
                 break;

@@ -60,8 +60,10 @@ public class Monster {
     /**
      * Constructs a new monster with a specified name.
      * Each monster have also needs an evolution deck.
+     * @param name the name of the monster e.g. Alienoid
+     * @param type the monster type e.g. Alien
      */
-    public Monster(String name) {
+    public Monster(String name, String type) {
         this.name = name;
     }
 
@@ -75,18 +77,30 @@ public class Monster {
     }
 
 
+    /**
+     * Get the health as string e.g. health = ♥♥♥♥♥♥♡♡♡♡ 6/10.
+     * @return the health string
+     */
+    public String getHealthString() {
+        String healthBar = Formatting.getRepeated(health, '♥');
+        healthBar += Formatting.getRepeated(maxHealth - health, '♡');
+        return "health = " + healthBar + " " + health + "/" + maxHealth + ", ";
+    }
+
+
+    /**
+     * Get the stats as string e.g. energy ⚡ = 5, stars ★ = 3.
+     * @return the stats string
+     */
+    public String getStatsString() {
+        return "energy ⚡ = " + energy + ", stars ★ = " + stars;
+    }
+
+
     @Override
     public String toString() {
         String monsterName = name + ":\n";
         String spacing = Formatting.getSpaces(4);
-
-        // Health Bar
-        String healthBar = Formatting.getRepeated(health, '♥');
-        healthBar += Formatting.getRepeated(maxHealth - health, '♡');
-        healthBar = spacing + "health = " + healthBar + " " + health + "/" + maxHealth + ", ";
-
-        String stats = "energy ⚡ = " + energy + ", stars ★ = " + stars + "\n";
-
-        return monsterName + healthBar + stats;
+        return monsterName + spacing + getHealthString() + getStatsString() + "\n";
     }
 }

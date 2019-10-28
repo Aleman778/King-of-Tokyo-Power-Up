@@ -5,4 +5,8 @@ public class StoreCard extends Card {
      * The energy cost of this card
      */
     private int cost;
+
+    public StoreCard(String name, int cost, boolean discard, String description) {
+
+    }
 }
