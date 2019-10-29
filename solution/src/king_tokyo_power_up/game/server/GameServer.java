@@ -1,12 +1,14 @@
 package king_tokyo_power_up.game.server;
 
 import king_tokyo_power_up.game.Game;
+import king_tokyo_power_up.game.monster.Monster;
 import king_tokyo_power_up.game.util.Terminal;
 
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.Scanner;
 
 /**
@@ -31,7 +33,7 @@ public class GameServer {
     /**
      * This game server player capacity.
      */
-    private int maxPlayers = 3;
+    private int maxPlayers = 2;
 
     /**
      * The number of players that have joined the server.
@@ -46,7 +48,7 @@ public class GameServer {
     /**
      * The port used by this server.
      */
-    private int port;
+    private int port = 2048;
 
 
     /**
@@ -64,38 +66,55 @@ public class GameServer {
      * Start the server
      */
     public void start() {
-
         try {
             socket = new ServerSocket(port, 50, address);
         } catch (IOException e) {
             e.printStackTrace();
             System.exit(1);
         }
-        terminal.writeString("Waiting for other players, press [ENTER] to start!");
+        game.setup(maxPlayers);
+        terminal.writeString("Waiting for other players, press [ENTER] to start!\n");
         Thread thread = new Thread(() -> {
-            while (joinedPlayers < maxPlayers) {
+            while (joinedPlayers < maxPlayers && !socket.isClosed()) {
                 try {
                     Socket s = socket.accept();
-
+                    Monster monster = game.getMonsters().get(joinedPlayers);
+                    String name = monster.getName();
+                    String type = monster.getType().toLowerCase();
+                    Terminal terminal = new Terminal(name, null);
+                    terminal.connect(s);
+                    terminal.writeString(name + "\n");
+                    monster.setTerminal(terminal);
+                    this.terminal.writeString(name + " the " + type + " monster has joined!\n");
                     joinedPlayers += 1;
-                    terminal.writeString("Player joined!");
                 } catch (IOException e) {
-                    e.printStackTrace();
                 }
             }
         });
         thread.start();
 
-        while (true) {
-            terminal.readString();
+        while (joinedPlayers < maxPlayers) {
+            terminal.nextLine();
             if (joinedPlayers < Game.MIN_PLAYERS) {
-                terminal.writeString("There is not enough players in this server minimum is " + Game.MIN_PLAYERS + "./n");
+                terminal.writeString("There is not enough players in this server minimum is " + Game.MIN_PLAYERS + "!\n");
             } else {
                 break;
             }
         }
 
-        game.setup(joinedPlayers);
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try {
+            thread.join(1);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        System.out.println("STARTING GAME!!!");
+        game.start(joinedPlayers);
     }
 
 
@@ -103,25 +122,32 @@ public class GameServer {
      * Close this server.
      */
     public void close() {
-
-
-
+        try {
+            socket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        terminal.close();
     }
+
 
     /**
      * Configure the server.
      */
     public void configure() {
-        terminal.writeString("\n\nLet's configure the server (press [ENTER] to use default settings)\n");
-        terminal.writeString("How many players are playing (from 2 to 6)? (default is " + Game.DEFAULT_PLAYERS + ")\n");
-        String errMessage = "Choose a number between " + Game.MIN_PLAYERS + " and " + Game.MAX_PLAYERS + ".\n";
-        maxPlayers = terminal.readInt(Game.MIN_PLAYERS, Game.MAX_PLAYERS, Game.DEFAULT_PLAYERS, errMessage);
+        try {
+            terminal.writeString("\n\nLet's configure the server (press [ENTER] to use default settings)\n");
+            terminal.writeString("How many players are playing (from 2 to 6)? (default is " + Game.DEFAULT_PLAYERS + ")\n");
+            String errMessage = "Choose a number between " + Game.MIN_PLAYERS + " and " + Game.MAX_PLAYERS + ".\n";
+            maxPlayers = terminal.readInt(Game.MIN_PLAYERS, Game.MAX_PLAYERS, Game.DEFAULT_PLAYERS, errMessage);
 
-        terminal.writeString("Please enter the internet address of this server: (default is localhost)\n");
-        address = terminal.readInetAddress(null, "Not a valid IP address\n");
+            terminal.writeString("Please enter the internet address of this server: (default is localhost)\n");
+            address = terminal.readInetAddress(null, "Not a valid IP address\n");
 
-        terminal.writeString("Please enter the port number of this server: (default is 2048)\n");
-        port = terminal.readInt(0, 0xFFFF, 2048, "Not a valid port number should be between 0 and " + 0xFFFF + ".\n");
-        System.out.println(maxPlayers + ", " + address + ", " + port);
+            terminal.writeString("Please enter the port number of this server: (default is 2048)\n");
+            port = terminal.readInt(0, 0xFFFF, 2048, "Not a valid port number should be between 0 and " + 0xFFFF + ".\n");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }

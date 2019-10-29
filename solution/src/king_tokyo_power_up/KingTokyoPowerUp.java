@@ -1,13 +1,12 @@
 package king_tokyo_power_up;
 
-import king_tokyo_power_up.game.DiceRoll;
-import king_tokyo_power_up.game.card.DeckFactory;
-import king_tokyo_power_up.game.monster.Monster;
+import king_tokyo_power_up.game.client.BotClient;
+import king_tokyo_power_up.game.client.GameClient;
 import king_tokyo_power_up.game.server.GameServer;
 import king_tokyo_power_up.game.util.Terminal;
 
-import java.util.InputMismatchException;
-import java.util.Random;
+import java.io.IOException;
+import java.net.SocketException;
 import java.util.Scanner;
 
 /**
@@ -58,17 +57,30 @@ public class KingTokyoPowerUp {
 
     /**
      * Entry point of the application, prints logo and opens the main menu.
+     * If program arguments server, client or bot is provided then main menu is skipped.
+     * This allows for quicker testing by skipping configurations and the menu.
      * @param args program arguments
      */
     public static void main(String[] args) {
         application = new KingTokyoPowerUp();
-        //application.printLogo();
-        //application.mainMenu();
-        application.sandbox();
-    }
-
-    public void sandbox() {
-        DeckFactory.createStoreDeck();
+        if (args.length > 0) {
+            if (args[0].equals("server")) {
+                GameServer server = new GameServer(new Scanner(System.in));
+                server.start();
+                server.close();
+            } else if (args[0].equals("client")) {
+                GameClient client = new GameClient(new Scanner(System.in));
+                client.start();
+                client.close();
+            } else if (args[0].equals("bot")) {
+                BotClient bot = new BotClient(new Scanner(System.in));
+                bot.start();
+                bot.close();
+            }
+        } else {
+            application.printLogo();
+            application.mainMenu();
+        }
     }
 
 
@@ -120,7 +132,11 @@ public class KingTokyoPowerUp {
         terminal.writeString("\t- 4: Exit the game\n");
         int option = -1;
         while (option < 1) {
-            option = terminal.readInt(1, 4, -1, "Not a valid option, please enter either 1, 2, 3 or 4.\n");
+            try {
+                option = terminal.readInt(1, 4, -1, "Not a valid option, please enter either 1, 2, 3 or 4.\n");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             if (option == -1)
                 terminal.writeString("Please enter something, has to be either 1, 2, 3 or 4.\n");
         }
@@ -130,17 +146,23 @@ public class KingTokyoPowerUp {
                 GameServer server = new GameServer(terminal.getScanner());
                 server.configure();
                 server.start();
+                server.close();
                 break;
             case MENU_START_CLIENT:
-                System.out.println("Starting client...");
-
+                GameClient client = new GameClient(terminal.getScanner());
+                client.configure();
+                client.start();
+                client.close();
                 break;
             case MENU_START_BOT_CLIENT:
-                System.out.println("Starting bot client... beep boop...");
-
+                BotClient bot = new BotClient(terminal.getScanner());
+                bot.configure();
+                bot.start();
+                bot.close();
                 break;
             case MENU_EXIT_GAME:
-                System.out.println("Bye bye");
+                terminal.writeString("Bye bye");
+                terminal.close();
                 System.exit(0);
                 break;
         }

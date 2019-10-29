@@ -34,9 +34,14 @@ public class Monster {
     private int stars = 0;
 
     /**
-     * The name of the monster.
+     * The name of the monster e.g. Alienoid.
      */
     private String name;
+
+    /**
+     * The type of monsters e.g. Alien.
+     */
+    private String type;
 
     /**
      * The terminal used to communicate with other monsters.
@@ -65,6 +70,7 @@ public class Monster {
      */
     public Monster(String name, String type) {
         this.name = name;
+        this.type = type;
     }
 
 
@@ -76,6 +82,41 @@ public class Monster {
         this.evolutions = evolutions;
     }
 
+
+    /**
+     * Get the name of the monster.
+     * @return the name string
+     */
+    public String getName() {
+        return name;
+    }
+
+
+    /**
+     * Get the type of monster.
+     * @return the type string
+     */
+    public String getType() {
+        return type;
+    }
+
+
+    /**
+     * Get the terminal used to communicate with this player.
+     * @return the terminal
+     */
+    public Terminal getTerminal() {
+        return terminal;
+    }
+
+
+    /**
+     * Set the terminal to be used for communicating with this monster.
+     * @param terminal the terminal to set
+     */
+    public void setTerminal(Terminal terminal) {
+        this.terminal = terminal;
+    }
 
     /**
      * Get the health as string e.g. health = ♥♥♥♥♥♥♡♡♡♡ 6/10.

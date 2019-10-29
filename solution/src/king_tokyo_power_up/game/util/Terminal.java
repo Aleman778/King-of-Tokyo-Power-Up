@@ -1,11 +1,9 @@
 package king_tokyo_power_up.game.util;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
@@ -38,7 +36,7 @@ public class Terminal {
     /**
      * The output data stream to send to the socket.
      */
-    private DataOutputStream output;
+    private OutputStreamWriter output;
 
 
     /**
@@ -61,8 +59,8 @@ public class Terminal {
         this.socket = socket;
         if (socket != null) {
             try {
-                this.input = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                this.output = new DataOutputStream(socket.getOutputStream());
+                this.input = new BufferedReader(new InputStreamReader(socket.getInputStream(), "UTF-8"));
+                this.output = new OutputStreamWriter(socket.getOutputStream(), "UTF8");
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -70,12 +68,26 @@ public class Terminal {
     }
 
 
-    private String nextLine() {
+    /**
+     * Busy wait for the next line from a scanner.
+     * @return the next line entered
+     */
+    public String nextLine() {
         if (scanner != null) {
             while (!scanner.hasNextLine()) {
                 // Busy wait until next response
+                // Sleep zzz... reduce CPU usage by allowing other processes to run.
+                try {
+                    Thread.sleep(1);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
             }
-            return scanner.nextLine();
+            String nextLine = scanner.nextLine();
+            if (socket != null) { // Sockes needs end line to properly send the message.
+                nextLine += "\n";
+            }
+            return nextLine;
         }
         return "";
     }
@@ -87,6 +99,7 @@ public class Terminal {
      * The terminal has to be interactive.
      */
     public void writeLine() {
+        System.out.print(name + "> ");
         writeString(nextLine());
     }
 
@@ -99,7 +112,8 @@ public class Terminal {
     public void writeString(String message) {
         if (socket != null) {
             try {
-                output.writeBytes(message);
+                output.write(message);
+                output.flush();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -115,15 +129,9 @@ public class Terminal {
      * For non connected terminal, has to be interactive.
      * @return the string read
      */
-    public String readString() {
+    public String readString() throws IOException {
         if (socket != null) {
-            try {
-                writeString(name + "> ");
-                return input.readLine();
-            } catch (IOException e) {
-                e.printStackTrace();
-                return "";
-            }
+            return input.readLine();
         } else if (scanner != null) {
             System.out.print(name + "> ");
             return nextLine();
@@ -141,9 +149,10 @@ public class Terminal {
      * @param max the maximum integer to allow
      * @param def the default number to use if input is empty
      * @param err the error message to possibly display
+     * @throws SocketException only for socket terminals, handle connection resets
      * @return the integer read will be within the set bounds or the default value.
      */
-    public int readInt(int min, int max, int def, String err) {
+    public int readInt(int min, int max, int def, String err) throws IOException {
         while (true) {
             String answer = readString();
             System.out.println(answer);
@@ -171,7 +180,7 @@ public class Terminal {
      * @param err the error message to display
      * @return the ip address read
      */
-    public InetAddress readInetAddress(InetAddress def, String err) {
+    public InetAddress readInetAddress(InetAddress def, String err) throws IOException {
         while (true) {
             String answer = readString();
             if (answer.isEmpty()) {
@@ -192,5 +201,33 @@ public class Terminal {
      */
     public Scanner getScanner() {
         return scanner;
+    }
+
+
+    /**
+     * Sets the name of this client.
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+
+    /**
+     * Closes the terminal, cannot be used after this unless it
+     * is not connected or interactive.
+     */
+    public void close() {
+        if (scanner != null)
+            scanner.close();
+        if (socket != null) {
+            try {
+                socket.close();
+                input.close();
+                output.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

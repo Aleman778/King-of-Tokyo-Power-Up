@@ -4,7 +4,11 @@ import king_tokyo_power_up.game.card.CardShop;
 import king_tokyo_power_up.game.monster.Monster;
 import king_tokyo_power_up.game.monster.MonsterFactory;
 import king_tokyo_power_up.game.state.GameState;
+import king_tokyo_power_up.game.state.StartTurnState;
+import king_tokyo_power_up.game.util.Terminal;
 
+import java.io.IOException;
+import java.net.SocketException;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -31,7 +35,12 @@ public class Game {
     /**
      * The current game state.
      */
-    private GameState state;
+    public GameState state;
+
+    /**
+     * The card shop where {@link king_tokyo_power_up.game.card.StoreCard} are purchased.
+     */
+    public CardShop shop;
 
     /**
      * List of the monsters in this game i.e. the players.
@@ -41,19 +50,31 @@ public class Game {
     /**
      * The monster currently inside Tokyo.
      */
-    private Monster inTokyo;
+    public Monster inTokyo;
 
     /**
      * The index monster currently playing.
      */
-    private int current;
+    public int current;
+
+    /**
+     * The number of players.
+     */
+    public int players;
+
+    /**
+     * Is the game still running?
+     */
+    private boolean running;
 
 
     /**
      * Constructs a new game.
      */
-    public void Game() {
+    public Game() {
         monsters = new ArrayList<>();
+        current = -1;
+        players = 0;
     }
 
 
@@ -65,10 +86,10 @@ public class Game {
      *      - [Requirement 3] Monsters health is set to 10 (done during creation)
      *      - [Requirement 5] Shuffle the evolution cards for the respective monsters
      * 2. [Requirement 4] Shuffle the store cards (done using the CardShop class).
-     * 3. [] Shuffle the evolution cards for the respective monsters
-     * @param players the number of players
+     * @param players the maximum number of players
      */
     public void setup(int players) {
+        this.players = players;
         ArrayList<Monster> allMonsters = MonsterFactory.createMonsters();
         Collections.shuffle(allMonsters);
         for (int i = 0; i < players; i++) {
@@ -79,10 +100,47 @@ public class Game {
 
 
     /**
+     * Starts the game:
+     * 1. Remove monsters if not all players have joined.
+     * 2. [Requirement 6] Randomise which monster starts the game.
+     * 3. Sets the initial state to StartTurnState and updates it.
+     * @param players the number of players actually playing
+     */
+    public void start(int players) {
+        if (this.players > players) {
+            monsters.subList(players, this.players).clear();
+        }
+        Collections.shuffle(monsters);
+        this.players = players;
+        this.running = true;
+        setState(new StartTurnState());
+        messageAll("Everyone is here! Starting the game now.\n\n");
+        while (running) {
+            // Sleep zzz... reduce CPU usage by allowing other processes to run.
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            update();
+        }
+    }
+
+    /**
      * Updates the game state, should progress to the next state.
      */
     public void update() {
         state.update(this);
+    }
+
+
+    /**
+     * Exits the game used when an error has occurred or server
+     * runs the exit command.
+     */
+    public void exit() {
+        messageAll("EXIT");
+        running = false;
     }
 
 
@@ -104,11 +162,28 @@ public class Game {
     }
 
 
+    public void messageAll(String message) {
+        for (Monster m : monsters) {
+            m.getTerminal().writeString(message);
+        }
+    }
+
     /**
      * Returns all the monsters in this game.
      * @return the monsters in game.
      */
     public ArrayList<Monster> getMonsters() {
         return monsters;
+    }
+
+
+    /**
+     * Returns the current monster.
+     * @return the monster null if game has not started yet.
+     */
+    public Monster getCurrent() {
+        if (current == -1)
+            return null;
+        return monsters.get(current);
     }
 }

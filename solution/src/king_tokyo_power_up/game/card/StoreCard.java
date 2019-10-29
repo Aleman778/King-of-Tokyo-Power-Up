@@ -26,6 +26,6 @@ public class StoreCard extends Card {
      * @param description
      */
     public StoreCard(String name, int cost, boolean discard, String description) {
-        this(name, description);
+        super(name, description);
     }
 }
