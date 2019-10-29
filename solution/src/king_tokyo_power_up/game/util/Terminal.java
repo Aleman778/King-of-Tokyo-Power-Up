@@ -174,6 +174,40 @@ public class Terminal {
 
 
     /**
+     * Reads an integer array of unique numbers with min and max bound.
+     * If provided number is out of bounds or not a number at all
+     * the error message is displayed and prompts to reenter.
+     * @param min the minimum integer to allow
+     * @param max the maximum integer to allow
+     * @param def the default number to use if input is empty
+     * @param err the error message to possibly display
+     * @throws SocketException only for socket terminals, handle connection resets
+     * @return the integer read will be within the set bounds or the default value.
+     */
+    public int[] readIntArray(int min, int max, int[] def, String err) throws IOException {
+        while (true) {
+            String answer = readString();
+            System.out.println(answer);
+            if (answer.isEmpty())
+                return def;
+
+            try {
+                int[] integers = CSVParser.parseUniqueInts(answer, ",");
+                for (int i : integers) {
+                    if (i < min || i > max) {
+                        writeString(err);
+                        continue;
+                    }
+                }
+                return integers;
+            } catch (NumberFormatException e) {
+                writeString(err);
+            }
+        }
+    }
+
+
+    /**
      * Reads an ip address from string and if nothing is provided
      * then the default address is used instead.
      * @param def the default address

@@ -84,6 +84,41 @@ public class Monster {
 
 
     /**
+     * Change the health by adding the given health points.
+     * @param hp the health points to increase
+     */
+    public void changeHealth(int hp) {
+        health += hp;
+        if (health > maxHealth)
+            health = maxHealth;
+        if (health < 0)
+            health = 0;
+    }
+
+
+    /**
+     * Change the victory points by adding the given victory points.
+     * @param vp the victory points to increase
+     */
+    public void changeStars(int vp) {
+        stars += vp;
+        if (stars < 0)
+            stars = 0;
+    }
+
+
+    /**
+     * Change the energy by adding the given energy points.
+     * @param ep the energy points to increase
+     */
+    public void changeEnergy(int ep) {
+        energy += ep;
+        if (energy < 0)
+            energy = 0;
+    }
+
+
+    /**
      * Get the name of the monster.
      * @return the name string
      */

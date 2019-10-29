@@ -69,11 +69,12 @@ public class GameClient {
             }
             try {
                 String message = terminal.readString();
-                System.out.println(message);
                 if (message.equals("QUERY")) {
                     terminal.writeLine();
                 } else if (message.equals("EXIT")) {
                     break;
+                } else {
+                    System.out.println(message);
                 }
             } catch (IOException e) {
                 e.printStackTrace();

@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
  * Static helper class for dealing with comma separated values files.
@@ -36,5 +39,26 @@ public class CSVParser {
             }
         }
         return result.toArray(new String[result.size()]);
+    }
+
+
+    /**
+     * Parse comma separated values of unique integers from given string
+     * @param string the string to parse
+     * @param delimiter the delimiter
+     * @return integer array of the numbers
+     */
+    public static int[] parseUniqueInts(String string, String delimiter) {
+        Set<Integer> result = new HashSet<>();
+        for (String value : string.split(delimiter)) {
+            result.add(Integer.parseInt(value.trim()));
+        }
+        int[] array = new int[result.size()];
+        int index = 0;
+        Iterator<Integer> iter = result.iterator();
+        while (iter.hasNext()) {
+            array[index++] = iter.next();
+        }
+        return array;
     }
 }

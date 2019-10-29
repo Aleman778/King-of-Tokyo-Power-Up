@@ -8,7 +8,6 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.SocketException;
 import java.util.Scanner;
 
 /**
@@ -78,7 +77,7 @@ public class GameServer {
             while (joinedPlayers < maxPlayers && !socket.isClosed()) {
                 try {
                     Socket s = socket.accept();
-                    Monster monster = game.getMonsters().get(joinedPlayers);
+                    Monster monster = game.getAllMonsters().get(joinedPlayers);
                     String name = monster.getName();
                     String type = monster.getType().toLowerCase();
                     Terminal terminal = new Terminal(name, null);

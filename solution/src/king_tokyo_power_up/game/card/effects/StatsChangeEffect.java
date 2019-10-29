@@ -30,13 +30,18 @@ public class StatsChangeEffect implements Effect {
      */
     public int energy;
 
+
+    /**
+     * Changes the stats of the targeted monster
+     * @param target the monster to target
+     */
     public StatsChangeEffect(Target target) {
         this.target = target;
     }
 
     @Override
     public void effect(Event event) {
-        Monster[] monster = event.getMonsters(target);
+        Monster[] monster = event.getGame().getMonsters(target);
 
 
     }

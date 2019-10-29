@@ -1,6 +1,7 @@
 package king_tokyo_power_up.game;
 
 import king_tokyo_power_up.game.card.CardShop;
+import king_tokyo_power_up.game.card.Target;
 import king_tokyo_power_up.game.monster.Monster;
 import king_tokyo_power_up.game.monster.MonsterFactory;
 import king_tokyo_power_up.game.state.GameState;
@@ -114,7 +115,7 @@ public class Game {
         this.players = players;
         this.running = true;
         setState(new StartTurnState());
-        messageAll("Everyone is here! Starting the game now.\n\n");
+        messageTo("Everyone is here! Starting the game now.\n\n", Target.ALL);
         while (running) {
             // Sleep zzz... reduce CPU usage by allowing other processes to run.
             try {
@@ -139,7 +140,7 @@ public class Game {
      * runs the exit command.
      */
     public void exit() {
-        messageAll("EXIT");
+        messageTo("EXIT", Target.ALL);
         running = false;
     }
 
@@ -162,17 +163,61 @@ public class Game {
     }
 
 
-    public void messageAll(String message) {
-        for (Monster m : monsters) {
-            m.getTerminal().writeString(message);
+    /**
+     * Send message to specific target of one or many monsters.
+     * @param message the message to send
+     * @param target the monsters to target
+     */
+    public void messageTo(String message, Target target) {
+        for (Monster monster : getMonsters(target)) {
+            monster.getTerminal().writeString(message);
         }
     }
+
+
+    /**
+     * Get an array of specific targeted monsters.
+     * @param target the target
+     * @return the array of monsters
+     */
+    public Monster[] getMonsters(Target target) {
+        ArrayList<Monster> targeted = new ArrayList<>();
+        for (Monster monster : monsters) {
+            switch (target) {
+                case SELF:
+                    if (monster == getCurrent()) {
+                        targeted.add(monster);
+                    }
+                    break;
+                case OTHERS:
+                    if (monster != getCurrent()) {
+                        targeted.add(monster);
+                    }
+                    break;
+                case ALL:
+                    targeted.add(monster);
+                    break;
+                case IN_TOKYO:
+                    if (monster == inTokyo) {
+                        targeted.add(monster);
+                    }
+                    break;
+                case OUTSIDE_TOKYO:
+                    if (monster != inTokyo) {
+                        targeted.add(monster);
+                    }
+                    break;
+            }
+        }
+        return targeted.toArray(new Monster[targeted.size()]);
+    }
+
 
     /**
      * Returns all the monsters in this game.
      * @return the monsters in game.
      */
-    public ArrayList<Monster> getMonsters() {
+    public ArrayList<Monster> getAllMonsters() {
         return monsters;
     }
 

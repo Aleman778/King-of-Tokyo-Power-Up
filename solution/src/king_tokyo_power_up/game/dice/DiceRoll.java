@@ -1,4 +1,4 @@
-package king_tokyo_power_up.game;
+package king_tokyo_power_up.game.dice;
 
 import king_tokyo_power_up.game.util.Formatting;
 
@@ -22,15 +22,15 @@ public class DiceRoll {
 
 
     /**
-     * Creates a new dice roll, the dice are rolled directly on construction.
-     * In order to reroll any dice call {@link DiceRoll#reroll(int)}
+     * Creates a new dice roll, the dice are NOT rolled directly on construction.
+     * In order to roll all dice call {@link DiceRoll#rollAll()}.
+     * In order to reroll any dice call {@link DiceRoll#reroll(int)}.
      * @param random  the random number generator to use
      * @param numDice the number of dice in this roll
      */
     public DiceRoll(Random random, int numDice) {
         this.random = random;
         this.dice = new Dice[numDice];
-        rollAll();
     }
 
 
