@@ -7,6 +7,10 @@ import king_tokyo_power_up.game.util.Terminal;
 
 import java.io.IOException;
 
+/**
+ * The start turn state changes the current player and also awards that
+ * player if it is still staying in Tokyo. Responsible for requirement 1.
+ */
 public class StartTurnState implements GameState {
     /**
      * Progresses to the next turn
@@ -16,23 +20,25 @@ public class StartTurnState implements GameState {
      */
     @Override
     public void update(Game game) {
-        if (game.current >= 0) {
-            Monster monster = game.getCurrent();
-            if (monster == game.inTokyo) {
-                monster.changeStars(1);
+        Monster monster;
+        do {
+            game.current++;
+            if (game.current >= game.players) {
+                game.current = 0;
             }
-        }
+            monster = game.getCurrent();
+        } while (!monster.isAlive());
 
-        game.current++;
-        if (game.current >= game.players)
-            game.current = 0;
 
-        Monster monster = game.getCurrent();
         Terminal term = monster.getTerminal();
+        if (monster == game.inTokyo) {
+            monster.changeStars(1);
+            term.writeString("You are in Tokyo and therefore gained +1 Star\n");
+        }
         term.writeString(toString(game));
         game.messageTo("\nWaiting for " + monster.getName() + " to make a move...\n", Target.OTHERS);
         try {
-            term.writeString("QUERY\n");
+            term.writeString("QUERY:ENTER\n");
             String str = term.readString();
         } catch (IOException e) {
             e.printStackTrace();
@@ -52,10 +58,8 @@ public class StartTurnState implements GameState {
     public String toString(Game game) {
         String name = game.getCurrent().getName();
         StringBuilder buffer = new StringBuilder();
-        buffer.append("\nYou are " + name + " and it is your turn. Here are the stats:\n");
-        for (Monster m : game.getAllMonsters()) {
-            buffer.append(m.toString());
-        }
+        buffer.append("\n\nYou are " + name + " and it is your turn. Here are the stats:\n");
+        buffer.append(game.toString());
         buffer.append("Press [ENTER]\n");
         return buffer.toString();
     }

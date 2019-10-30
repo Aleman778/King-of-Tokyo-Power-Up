@@ -6,6 +6,7 @@ import king_tokyo_power_up.game.card.EvolutionCard;
 import king_tokyo_power_up.game.util.Formatting;
 import king_tokyo_power_up.game.util.Terminal;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -71,6 +72,7 @@ public class Monster {
     public Monster(String name, String type) {
         this.name = name;
         this.type = type;
+        this.cards = new ArrayList<>();
     }
 
 
@@ -80,6 +82,24 @@ public class Monster {
      */
     public void setEvolutionDeck(Deck<EvolutionCard> evolutions) {
         this.evolutions = evolutions;
+    }
+
+
+    /**
+     * Get the current health of the monster.
+     * @return current health
+     */
+    public int getHealth() {
+        return health;
+    }
+
+
+    /**
+     * Check if the monster is alive hp > 0.
+     * @return true if alive, false is dead.
+     */
+    public boolean isAlive() {
+        return health > 0;
     }
 
 
@@ -97,6 +117,15 @@ public class Monster {
 
 
     /**
+     * Get the current number of stars of the monster.
+     * @return current number of stars
+     */
+    public int getStars() {
+        return stars;
+    }
+
+
+    /**
      * Change the victory points by adding the given victory points.
      * @param vp the victory points to increase
      */
@@ -108,6 +137,15 @@ public class Monster {
 
 
     /**
+     * Get the current amount of energy of the monster.
+     * @return current amount of energy
+     */
+    public int getEnergy() {
+        return energy;
+    }
+
+
+    /**
      * Change the energy by adding the given energy points.
      * @param ep the energy points to increase
      */
@@ -115,6 +153,34 @@ public class Monster {
         energy += ep;
         if (energy < 0)
             energy = 0;
+    }
+
+
+    /**
+     * Gets attacked by the given monster and you take the specific amount of damage.
+     * @param attacker the monster who attacked you
+     * @param damage the damage dealt to you
+     */
+    public void attack(Monster attacker, int damage) {
+        changeHealth(-damage);
+        if (health > 0) {
+            terminal.writeString("You were attacked by " + attacker.getName() + " and lost " + damage + " hp\n");
+            terminal.writeString("You have " + getHealthString() + " health left!\n");
+        } else {
+            terminal.writeString("You were killed by " + attacker.getName() + " and lost the game!\n");
+        }
+    }
+
+    /**
+     * Draw an evolution card from the evolution deck.
+     */
+    public void evolve() {
+        EvolutionCard card = evolutions.draw();
+        if (card != null) {
+            cards.add(card);
+        } else {
+            terminal.writeString("Your evolution card deck is empty!\n");
+        }
     }
 
 
@@ -154,13 +220,13 @@ public class Monster {
     }
 
     /**
-     * Get the health as string e.g. health = ♥♥♥♥♥♥♡♡♡♡ 6/10.
+     * Get the health as string e.g. ♥♥♥♥♥♥♡♡♡♡ 6/10.
      * @return the health string
      */
     public String getHealthString() {
         String healthBar = Formatting.getRepeated(health, '♥');
         healthBar += Formatting.getRepeated(maxHealth - health, '♡');
-        return "health = " + healthBar + " " + health + "/" + maxHealth + ", ";
+        return healthBar + " " + health + "/" + maxHealth;
     }
 
 
@@ -169,14 +235,28 @@ public class Monster {
      * @return the stats string
      */
     public String getStatsString() {
-        return "energy ⚡ = " + energy + ", stars ★ = " + stars;
+        return "health = " + getHealthString() + ", energy ⚡ = " + energy + ", stars ★ = " + stars;
     }
 
 
+    /**
+     * Converts the monster to string.
+     * @param inTokyo is the monster in tokyo?
+     * @return string with stats of this monster
+     */
+    public String toString(boolean inTokyo) {
+        String inTokyoStatus = inTokyo ? " (in Tokyo)" : "";
+        String monsterName = name + inTokyoStatus + ":\n";
+        String spacing = Formatting.getSpaces(4);
+        if (isAlive()) {
+            return monsterName + spacing + getStatsString() + "\n";
+        } else {
+            return monsterName + spacing + "is dead (RIP)\n";
+        }
+    }
+
     @Override
     public String toString() {
-        String monsterName = name + ":\n";
-        String spacing = Formatting.getSpaces(4);
-        return monsterName + spacing + getHealthString() + getStatsString() + "\n";
+        return toString(false);
     }
 }

@@ -128,6 +128,7 @@ public class Terminal {
      * or from this client (if not connected).
      * For non connected terminal, has to be interactive.
      * @return the string read
+     * @throws IOException if was not able to get an answer
      */
     public String readString() throws IOException {
         if (socket != null) {
@@ -149,13 +150,12 @@ public class Terminal {
      * @param max the maximum integer to allow
      * @param def the default number to use if input is empty
      * @param err the error message to possibly display
-     * @throws SocketException only for socket terminals, handle connection resets
+     * @throws IOException if was not able to get an answer
      * @return the integer read will be within the set bounds or the default value.
      */
     public int readInt(int min, int max, int def, String err) throws IOException {
         while (true) {
             String answer = readString();
-            System.out.println(answer);
             if (answer.isEmpty())
                 return def;
 
@@ -181,25 +181,26 @@ public class Terminal {
      * @param max the maximum integer to allow
      * @param def the default number to use if input is empty
      * @param err the error message to possibly display
-     * @throws SocketException only for socket terminals, handle connection resets
+     * @throws IOException if was not able to get an answer
      * @return the integer read will be within the set bounds or the default value.
      */
     public int[] readIntArray(int min, int max, int[] def, String err) throws IOException {
         while (true) {
             String answer = readString();
-            System.out.println(answer);
             if (answer.isEmpty())
                 return def;
 
             try {
                 int[] integers = CSVParser.parseUniqueInts(answer, ",");
+                boolean invalid = false;
                 for (int i : integers) {
                     if (i < min || i > max) {
                         writeString(err);
-                        continue;
+                        invalid = true;
                     }
                 }
-                return integers;
+                if (!invalid)
+                    return integers;
             } catch (NumberFormatException e) {
                 writeString(err);
             }
@@ -208,10 +209,35 @@ public class Terminal {
 
 
     /**
+     * Reads a boolean value and the value is decided by the user entering either
+     * the same as the true token or false token. The true token yields a true value/
+     * The false token yields a false value.
+     * @param trueToken token for true value (has to be lowercase!)
+     * @param falseToken token for false value (has to be lowercase!)
+     * @return a boolean value based on the answer from terminal
+     * @throws IOException if was not able to get an answer
+     */
+    public boolean readBoolean(String trueToken, String falseToken, String err) throws IOException {
+        while (true) {
+            String answer = readString().toLowerCase();
+            if (answer.equals(trueToken)) {
+                return true;
+            } else if (answer.equals(falseToken)) {
+                return false;
+            } else {
+               writeString(err);
+            }
+        }
+
+    }
+
+
+    /**
      * Reads an ip address from string and if nothing is provided
      * then the default address is used instead.
      * @param def the default address
      * @param err the error message to display
+     * @throws IOException if was not able to get an answer
      * @return the ip address read
      */
     public InetAddress readInetAddress(InetAddress def, String err) throws IOException {

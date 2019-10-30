@@ -8,6 +8,7 @@ public enum EvolutionType {
      * Permanent evolution is an evolution that you keep throughout the game.
      */
     PERMANENT_EVOLUTION("Permanent Evolution"),
+
     /**
      * Temporary evolution is an evolution that is played when received and then discarded.
      */

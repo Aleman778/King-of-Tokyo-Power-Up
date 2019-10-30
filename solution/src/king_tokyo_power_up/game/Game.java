@@ -96,7 +96,7 @@ public class Game {
         for (int i = 0; i < players; i++) {
             monsters.add(allMonsters.get(i));
         }
-        CardShop shop = new CardShop();
+        shop = new CardShop();
     }
 
 
@@ -140,7 +140,8 @@ public class Game {
      * runs the exit command.
      */
     public void exit() {
-        messageTo("EXIT", Target.ALL);
+        messageTo("EXIT\n", Target.ALL);
+        System.out.println("EXITING THE SERVER!!!");
         running = false;
     }
 
@@ -230,5 +231,28 @@ public class Game {
         if (current == -1)
             return null;
         return monsters.get(current);
+    }
+
+
+    /**
+     * Get the card shop in this game.
+     * @return the card shop object
+     */
+    public CardShop getShop() {
+        return shop;
+    }
+
+
+    /**
+     * Displays the stats of all monsters.
+     * @return string with stats
+     */
+    @Override
+    public String toString() {
+        StringBuilder buffer = new StringBuilder();
+        for (Monster m : monsters) {
+            buffer.append(m.toString(m == inTokyo));
+        }
+        return buffer.toString();
     }
 }

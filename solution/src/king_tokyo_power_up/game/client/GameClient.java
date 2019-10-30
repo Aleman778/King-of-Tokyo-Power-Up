@@ -69,7 +69,7 @@ public class GameClient {
             }
             try {
                 String message = terminal.readString();
-                if (message.equals("QUERY")) {
+                if (message.contains("QUERY")) {
                     terminal.writeLine();
                 } else if (message.equals("EXIT")) {
                     break;

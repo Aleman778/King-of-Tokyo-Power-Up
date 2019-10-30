@@ -82,8 +82,8 @@ public class DiceRollState implements GameState {
     public void reroll(Game game) {
         try {
             terminal.writeString(toString(game));
-            terminal.writeString("QUERY\n");
-            int[] reroll = terminal.readIntArray(1, numDice, new int[0], "Not a valid list of rerolls, enter e.g. 3, 1, 5!");
+            terminal.writeString("QUERY:DICE_REROLL\n");
+            int[] reroll = terminal.readIntArray(1, numDice, new int[0], "Not a valid list of rerolls, enter e.g. 3, 1, 5!\nQUERY:REROLL\n");
             if (reroll.length == 0) {
                 rerolls = 0;
                 return;
@@ -115,7 +115,7 @@ public class DiceRollState implements GameState {
     @Override
     public String toString(Game game) {
         String plural = rerolls == 1 ? "" : "s";
-        return "You rolled (You can reroll " + rerolls + " more time" + plural +
+        return "You rolled (you can reroll " + rerolls + " more time" + plural +
                 "):\n" + diceRoll.toString() + "\n";
     }
 }

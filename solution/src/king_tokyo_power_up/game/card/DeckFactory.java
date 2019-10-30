@@ -2,7 +2,6 @@ package king_tokyo_power_up.game.card;
 
 import king_tokyo_power_up.game.util.CSVParser;
 
-import java.io.BufferedReader;
 import java.io.IOException;
 
 /**
@@ -65,8 +64,8 @@ public class DeckFactory {
      * @return the evolution card deck
      */
     private static Deck<EvolutionCard> createAlienoidDeck() {
-
-        return null;
+        Deck<EvolutionCard> deck = new Deck<>();
+        return deck;
     }
 
 
@@ -75,8 +74,8 @@ public class DeckFactory {
      * @return the evolution card deck
      */
     private static Deck<EvolutionCard> createGigazaurDeck() {
-
-        return null;
+        Deck<EvolutionCard> deck = new Deck<>();
+        return deck;
     }
 
 
@@ -85,7 +84,8 @@ public class DeckFactory {
      * @return the evolution card deck
      */
     private static Deck<EvolutionCard> createKongDeck() {
-        return null;
+        Deck<EvolutionCard> deck = new Deck<>();
+        return deck;
     }
 
 
@@ -94,8 +94,8 @@ public class DeckFactory {
      * @return the evolution card deck
      */
     private static Deck<EvolutionCard> createPumpkinJackDeck() {
-
-        return null;
+        Deck<EvolutionCard> deck = new Deck<>();
+        return deck;
     }
 
 
@@ -104,8 +104,8 @@ public class DeckFactory {
      * @return the evolution card deck
      */
     private static Deck<EvolutionCard> createRobDeck() {
-
-        return null;
+        Deck<EvolutionCard> deck = new Deck<>();
+        return deck;
     }
 
 
@@ -114,7 +114,7 @@ public class DeckFactory {
      * @return the evolution card deck
      */
     private static Deck<EvolutionCard> createCthulhuDeck() {
-
-        return null;
+        Deck<EvolutionCard> deck = new Deck<>();
+        return deck;
     }
 }

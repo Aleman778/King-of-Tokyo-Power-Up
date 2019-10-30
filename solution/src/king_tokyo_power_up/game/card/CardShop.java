@@ -17,6 +17,9 @@ public class CardShop {
     private StoreCard[] stock;
 
 
+    /**
+     * Constructs a new store and sets up the stock immediately.
+     */
     public CardShop() {
         deck = DeckFactory.createStoreDeck();
         deck.shuffle();
@@ -25,8 +28,13 @@ public class CardShop {
     }
 
 
+    /**
+     * Purchase a card from the store.
+     * @param index the index to purchase
+     * @return
+     */
     public StoreCard purchase(int index) {
-        if (index < 0 || index >= 3)
+        if (index < 0 || index > 2)
             throw new IllegalArgumentException("Cannot purchase card " + index + " pick a card from 0 through 2");
         StoreCard card = stock[index];
         deck.add(card);
@@ -35,11 +43,19 @@ public class CardShop {
     }
 
 
+    /**
+     * Peek at what the next card in the store deck is.
+     * @return next store card in the deck
+     */
     public StoreCard peek() {
         return deck.peek();
     }
 
 
+    /**
+     * Reset the store, removes the current cards in stock and
+     * draws three new cards to the stock in the store.
+     */
     public void reset() {
         for (int i = 0; i < 3; i++) {
             StoreCard card = deck.draw();
@@ -49,13 +65,35 @@ public class CardShop {
     }
 
 
+    /**
+     * Get the cost of a specific card the shop.
+     * @param index the card index
+     * @return the energy cost
+     */
+    public int getCost(int index) {
+        if (index < 0 || index > 2)
+            throw new IllegalArgumentException("Cannot check card " + index + " pick a card from 0 through 2");
+        return stock[index].cost;
+    }
+
+
+    /**
+     * Get the cost of resetting the store.
+     * @return always 2
+     */
+    public int getResetCost() {
+        return 2;
+    }
+
+
     @Override
     public String toString() {
-        String result = "";
+        StringBuilder result = new StringBuilder();
         for (int i = 0; i < 3; i++) {
-            result += "[" + i + "] " + stock[i];
+            result.append("[" + i + "] " + stock[i] + "\n");
         }
-        result += "[3] Reset the store (cost: 2⚡ energy)";
-        return result;
+        result.append("[3] Reset the store, Cost 2⚡\n");
+        result.append("[4] No thanks (or press [ENTER])!");
+        return result.toString();
     }
 }
