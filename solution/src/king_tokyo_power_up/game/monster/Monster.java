@@ -1,12 +1,10 @@
 package king_tokyo_power_up.game.monster;
 
-import king_tokyo_power_up.game.card.Card;
-import king_tokyo_power_up.game.card.Deck;
-import king_tokyo_power_up.game.card.EvolutionCard;
+import king_tokyo_power_up.game.Game;
+import king_tokyo_power_up.game.card.*;
 import king_tokyo_power_up.game.util.Formatting;
 import king_tokyo_power_up.game.util.Terminal;
 
-import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -117,6 +115,19 @@ public class Monster {
 
 
     /**
+     * Change the maximum health by adding the given max number.
+     * @param max the maximum health points to increase
+     */
+    public void changeMaxHealth(int max) {
+        maxHealth += max;
+        if (health > maxHealth)
+            health = maxHealth;
+        if (maxHealth < 0)
+            maxHealth = 0;
+    }
+
+
+    /**
      * Get the current number of stars of the monster.
      * @return current number of stars
      */
@@ -157,30 +168,90 @@ public class Monster {
 
 
     /**
-     * Gets attacked by the given monster and you take the specific amount of damage.
-     * @param attacker the monster who attacked you
-     * @param damage the damage dealt to you
-     */
-    public void attack(Monster attacker, int damage) {
-        changeHealth(-damage);
-        if (health > 0) {
-            terminal.writeString("You were attacked by " + attacker.getName() + " and lost " + damage + " hp\n");
-            terminal.writeString("You have " + getHealthString() + " health left!\n");
-        } else {
-            terminal.writeString("You were killed by " + attacker.getName() + " and lost the game!\n");
-        }
-    }
-
-    /**
      * Draw an evolution card from the evolution deck.
      */
-    public void evolve() {
+    public void evolve(Game game) {
         EvolutionCard card = evolutions.draw();
         if (card != null) {
-            cards.add(card);
+            immediate(game, card);
+            if (!card.discard())
+                cards.add(card);
         } else {
             terminal.writeString("Your evolution card deck is empty!\n");
         }
+    }
+
+
+    /**
+     * Start turn event is called at the beginning the owners turn.
+     * @param game the game state
+     */
+    public void startTurn(Game game) {
+        for (Card card : cards) {
+            Event event = new Event(this, card, game);
+            card.getEffect().startTurn(event);
+        }
+    }
+
+
+    /**
+     * Purchase event is called before the card owner is purchasing something.
+     * @param game the game state
+     */
+    public void purchase(Game game) {
+        for (Card card : cards) {
+            Event event = new Event(this, card, game);
+            card.getEffect().purchase(event);
+        }
+    }
+
+
+    /**
+     * Attack event callback is called when the card owner is attacking another monster.
+     * @param game the game state
+     * @param target the monster who you are attacking
+     */
+    public void attack(Game game, Monster target) {
+        for (Card card : cards) {
+            AttackEvent event = new AttackEvent(this, card, game, target);
+            card.getEffect().attack(event);
+        }
+    }
+
+
+    /**
+     * Attacked event callback is called when the card owner is attacked by another monster.
+     * @param game the game state
+     * @param attacker the monster who attacked you
+     */
+    public void attacked(Game game, Monster attacker) {
+        for (Card card : cards) {
+            AttackEvent event = new AttackEvent(this, card, game, attacker);
+            card.getEffect().attacked(event);
+        }
+    }
+
+
+    /**
+     * Event callback is executed at the beginning the owners turn.
+     * @param game the game state
+     */
+    public void endTurn(Game game) {
+        for (Card card : cards) {
+            Event event = new Event(this, card, game);
+            card.getEffect().endTurn(event);
+        }
+    }
+
+
+    /**
+     * Immediate event callback is called directly upon use.
+     * Either automatically via discard card, or manually using a card.
+     * @param game the game state
+     */
+    public void immediate(Game game, Card card) {
+        Event event = new Event(this, card, game);
+        card.getEffect().immediate(event);
     }
 
 

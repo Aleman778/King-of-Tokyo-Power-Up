@@ -71,18 +71,15 @@ public class CardShop {
      * @return the energy cost
      */
     public int getCost(int index) {
-        if (index < 0 || index > 2)
+        if (index < 0 || index > 4) {
             throw new IllegalArgumentException("Cannot check card " + index + " pick a card from 0 through 2");
-        return stock[index].cost;
-    }
-
-
-    /**
-     * Get the cost of resetting the store.
-     * @return always 2
-     */
-    public int getResetCost() {
-        return 2;
+        } else if (index < 3) {
+            return stock[index].cost;
+        } else if (index == 3) {
+            return 2;
+        } else {
+            return 0;
+        }
     }
 
 
@@ -93,7 +90,7 @@ public class CardShop {
             result.append("[" + i + "] " + stock[i] + "\n");
         }
         result.append("[3] Reset the store, Cost 2⚡\n");
-        result.append("[4] No thanks (or press [ENTER])!");
+        result.append("[4 or ENTER] No thanks");
         return result.toString();
     }
 }

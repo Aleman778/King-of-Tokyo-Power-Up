@@ -1,5 +1,8 @@
 package king_tokyo_power_up.game.card;
 
+import king_tokyo_power_up.game.card.effects.AttackChangeEffect;
+import king_tokyo_power_up.game.card.effects.ShopDiscountEffect;
+import king_tokyo_power_up.game.card.effects.StatsChangeEffect;
 import king_tokyo_power_up.game.util.CSVParser;
 
 import java.io.IOException;
@@ -20,24 +23,33 @@ public class DeckFactory {
      * @return the deck containing store cards
      */
     public static Deck<StoreCard> createStoreDeck() {
-        try {
-            String[] values = CSVParser.parse("game/card/store.csv", ";");
-            Deck<StoreCard> deck = new Deck<>();
-            int index = 0;
-            while (index < values.length - 4) {
-                String name = values[index];
-                int cost = Integer.parseInt(values[index + 1]);
-                boolean discard = values[index + 2].equals("Discard");
-                String description = values[index + 3];
-                deck.add(new StoreCard(name, cost, discard, description));
-                index += 4;
-            }
-
-            return deck;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return null;
+        Deck<StoreCard> deck = new Deck<>();
+        deck.add(new StoreCard(
+                "Acid Attack", 6, false,
+                "Deal 1 extra damage each turn (even when you don't otherwise attack)",
+                new AttackChangeEffect(0, 1))
+        );
+        deck.add(new StoreCard(
+                "Alien Metabolism", 3, false,
+                "Buying cards costs you 1⚡ energy less",
+                new ShopDiscountEffect(1, true))
+        );
+        deck.add(new StoreCard(
+                "Alpha Monster", 5, false,
+                "Gain 1★ star when you attack",
+                new StatsChangeEffect(Target.SELF, 0,0,1,0))
+        );
+        deck.add(new StoreCard(
+                "Apartment Building", 5, true,
+                "Immediately Gain 3★",
+                new StatsChangeEffect(Target.SELF, 0,0,3,0))
+        );
+        deck.add(new StoreCard(
+                "Armour Plating", 5, true,
+                "When attacked ignore 1 damage",
+                new AttackChangeEffect(1, 0))
+        );
+        return deck;
     }
 
 

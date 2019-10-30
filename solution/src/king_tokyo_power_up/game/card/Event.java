@@ -3,21 +3,25 @@ package king_tokyo_power_up.game.card;
 import king_tokyo_power_up.game.Game;
 import king_tokyo_power_up.game.monster.Monster;
 
-import java.util.ArrayList;
-
 /**
- * Event class holds the owner of the event and the general game state.
+ * Event class holds the owner of the event, card owning this effect and the general game state.
+ * This event class is used to give context to an {@link king_tokyo_power_up.game.card.effects.Effect}.
  */
 public class Event {
     /**
      * The monster who owns this event i.e. has the current active effects.
      */
-    private final Monster owner;
+    public final Monster owner;
 
     /**
      * The game object holding the state of the game.
      */
-    private final Game game;
+    public final Game game;
+
+    /**
+     * Which card is owning this effect.
+     */
+    public final Card card;
 
 
     /**
@@ -25,25 +29,19 @@ public class Event {
      * @param owner the monster owner
      * @param game the game state.
      */
-    public Event(Monster owner, Game game) {
+    public Event(Monster owner, Card card, Game game) {
         this.owner = owner;
         this.game = game;
+        this.card = card;
     }
 
 
     /**
-     * Get the monster who owns this event
-     * @return the owner
+     * Sends a formatted message with the name of the card
+     * the a specific monster. The message is terminated with new line.
+     * @param monster the monster to message
      */
-    public Monster getOwner() {
-        return owner;
-    }
-
-
-    /**
-     * @return the game.
-     */
-    public Game getGame() {
-        return game;
+    public void sendMessage(Monster monster, String message) {
+        monster.getTerminal().writeString("[" + card.getName() + "] " + message + "\n");
     }
 }

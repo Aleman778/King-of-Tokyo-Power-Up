@@ -33,7 +33,7 @@ public class ActionState implements GameState {
     /**
      * The result of the dice rolled in previous state.
      */
-    private DiceResult result;
+    public DiceResult result;
 
     /**
      * The current monster performing the action based on the dice result.
@@ -75,7 +75,7 @@ public class ActionState implements GameState {
         monster.changeEnergy(getEnergy());
         monster.changeHealth(getHealth());
         if (isEvolving()) {
-            monster.evolve();
+            monster.evolve(game);
         }
         attackAction();
         game.setState(new ShopState());
@@ -148,28 +148,19 @@ public class ActionState implements GameState {
         if (monster == game.inTokyo) {
             Monster[] targets = game.getMonsters(Target.OTHERS);
             for (Monster mon : targets) {
-                mon.attack(monster, result.claws);
+                attack(mon);
             }
         } else {
             if (game.inTokyo == null) {
                 enterTokyo();
             } else {
                 Monster target = game.inTokyo;
-                target.attack(monster, result.claws);
+                attack(target);
+                if (result.claws == 0)
+                    return;
+
                 if (target.isAlive()) {
-                    terminal.writeString("Waiting for " + target.getName() + "...\n");
-                    Terminal targetTerminal = target.getTerminal();
-                    targetTerminal.writeString("Do you wish to leave Tokyo? (enter Yes or No)\n");
-                    targetTerminal.writeString("QUERY:LEAVE_TOKYO\n");
-                    try {
-                        if (targetTerminal.readBoolean("yes", "no", "Please enter Yes or No!\nQUERY:LEAVE_TOKYO\n")) {
-                            game.inTokyo = null;
-                            enterTokyo();
-                        }
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                        game.exit();
-                    }
+                    askLeaveTokyo(target);
                 } else {
                     game.inTokyo = null;
                     enterTokyo();
@@ -177,6 +168,51 @@ public class ActionState implements GameState {
             }
         }
     }
+
+
+    /**
+     * Ask the person who was attacked if it wishes to leave Tokyo.
+     * If he answers YES you have to enter Tokyo.
+     * @param target the monster to ask
+     */
+    public void askLeaveTokyo(Monster target) {
+        terminal.writeString("Waiting for " + target.getName() + "...\n");
+        Terminal targetTerminal = target.getTerminal();
+        targetTerminal.writeString("Do you wish to leave Tokyo? (enter Yes or No)\n");
+        targetTerminal.writeString("QUERY:LEAVE_TOKYO\n");
+        try {
+            if (targetTerminal.readBoolean("yes", "no", "Please enter Yes or No!\nQUERY:LEAVE_TOKYO\n")) {
+                game.inTokyo = null;
+                enterTokyo();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            game.exit();
+        }
+    }
+
+
+    /**
+     * Attacks a specific monster.
+     * @param target the monster to attack
+     */
+    public void attack(Monster target) {
+        Terminal terminal = target.getTerminal();
+        target.attacked(game, monster);
+        monster.attack(game, target);
+        // Your attack can be shielded by the target.
+        if (result.claws == 0)
+            return;
+
+        target.changeHealth(-result.claws);
+        if (target.getHealth() > 0) {
+            terminal.writeString("You were attacked by " + monster.getName() + " and lost " + result.claws + " hp\n");
+            terminal.writeString("You have " + target.getHealthString() + " health left!\n");
+        } else {
+            terminal.writeString("You were killed by " + monster.getName() + " and lost the game!\n");
+        }
+    }
+
 
     /**
      * The current monster enters Tokyo if it is unoccupied.

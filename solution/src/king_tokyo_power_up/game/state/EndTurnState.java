@@ -65,7 +65,7 @@ public class EndTurnState implements GameState {
     /**
      * Get the monster who is victorious, if none is null is returned.
      * @param game the state of the game
-     * @return
+     * @return the monster who is winning, null if none
      */
     public Monster getWinningMonster(Game game) {
         Monster winner = getMonster20Stars(game);
