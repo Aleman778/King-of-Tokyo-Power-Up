@@ -1,4 +1,4 @@
-package king_tokyo_power_up.game.card;
+package king_tokyo_power_up.game.event;
 
 /**
  * The different types of events in the game.

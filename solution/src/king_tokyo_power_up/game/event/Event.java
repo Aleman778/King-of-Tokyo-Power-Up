@@ -1,6 +1,7 @@
-package king_tokyo_power_up.game.card;
+package king_tokyo_power_up.game.event;
 
 import king_tokyo_power_up.game.Game;
+import king_tokyo_power_up.game.card.Card;
 import king_tokyo_power_up.game.monster.Monster;
 
 /**
