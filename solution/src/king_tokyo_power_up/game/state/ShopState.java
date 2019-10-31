@@ -1,10 +1,7 @@
 package king_tokyo_power_up.game.state;
 
 import king_tokyo_power_up.game.Game;
-import king_tokyo_power_up.game.card.Card;
-import king_tokyo_power_up.game.card.CardShop;
-import king_tokyo_power_up.game.card.StoreCard;
-import king_tokyo_power_up.game.card.Target;
+import king_tokyo_power_up.game.card.*;
 import king_tokyo_power_up.game.monster.Monster;
 import king_tokyo_power_up.game.util.Terminal;
 
@@ -74,7 +71,7 @@ public class ShopState implements GameState {
                 terminal.writeString("QUERY:SHOP\n");
                 purchaseOption = terminal.readInt(0, 4, 4, "Please enter a number from 0 to 4 (default is 4).\nQUERY:SHOP\n");
                 energyCost = shop.getCost(purchaseOption);
-                monster.purchase(game);
+                monster.notify(game, EventType.PURCHASE);
                 if (purchaseOption >= 0 && purchaseOption <= 2) {
                     purchaseCard();
                 } else if (purchaseOption == 3) {
@@ -97,8 +94,8 @@ public class ShopState implements GameState {
     public void purchaseCard() {
         if (energyCost <= monster.getEnergy()) {
             Card card = shop.purchase(purchaseOption);
-
             monster.changeEnergy(-energyCost);
+            monster.addCard(game, card);
         } else {
             terminal.writeString("Cannot afford the that card! Please choose something else!\n");
         }
@@ -110,8 +107,8 @@ public class ShopState implements GameState {
      */
     public void purchaseReset() {
         if (energyCost <= monster.getEnergy()) {
-            shop.reset();
             monster.changeEnergy(-energyCost);
+            shop.reset();
             game.messageTo("[SHOP] " + monster.getName() + " has reset the shop!\n", Target.OTHERS);
             terminal.writeString("\nShop reset:\n" + game.shop.toString() + "\n");
         } else {

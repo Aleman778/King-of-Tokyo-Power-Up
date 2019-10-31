@@ -1,9 +1,10 @@
 package king_tokyo_power_up.game.card;
 
-import king_tokyo_power_up.game.card.effects.AttackChangeEffect;
-import king_tokyo_power_up.game.card.effects.ShopDiscountEffect;
-import king_tokyo_power_up.game.card.effects.StatsChangeEffect;
-import king_tokyo_power_up.game.util.CSVParser;
+import king_tokyo_power_up.game.card.effects.*;
+import king_tokyo_power_up.game.dice.Dice;
+import king_tokyo_power_up.game.dice.DiceResult;
+import king_tokyo_power_up.game.monster.Monster;
+import king_tokyo_power_up.game.state.DiceRollState;
 
 import java.io.IOException;
 
@@ -37,12 +38,27 @@ public class DeckFactory {
         deck.add(new StoreCard(
                 "Alpha Monster", 5, false,
                 "Gain 1★ star when you attack",
-                new StatsChangeEffect(Target.SELF, 0,0,1,0))
+                new Effect() {
+                    // Should only give one star when attacking any number of monsters.
+                    private boolean disabled = false;
+                    @Override
+                    public void effect(Event event) {
+                        if (event.type == EventType.ATTACKED && !disabled) {
+                            event.owner.changeStars(1);
+                            event.sendMessage(event.owner, "Gain 1★ star because you attacked!");
+                            // Prevents monster from earning multipe stars if attacking multiple monsters.
+                            disabled = true;
+                        } else if (event.type == EventType.END_TURN) {
+                            // Enable the card again, can gain 1 star next attack.
+                            disabled = false;
+                        }
+                    }
+                })
         );
         deck.add(new StoreCard(
                 "Apartment Building", 5, true,
-                "Immediately Gain 3★",
-                new StatsChangeEffect(Target.SELF, 0,0,3,0))
+                "Gain 3★ stars",
+                new StatsChangeEffect(0,0,3,0))
         );
         deck.add(new StoreCard(
                 "Armour Plating", 5, true,
@@ -54,30 +70,16 @@ public class DeckFactory {
 
 
     /**
-     * Creates the evolution deck for a specific monster.
-     * @param monster the name of the monster
-     * @return the evolution deck, null for invalid monster name
-     */
-    public static Deck<EvolutionCard> createEvolutionDeck(String monster) {
-        switch (monster) {
-            case "Alienoid":     return createAlienoidDeck();
-            case "Gigazaur":     return createGigazaurDeck();
-            case "Kong":         return createKongDeck();
-            case "Pumpkin Jack": return createPumpkinJackDeck();
-            case "Rob":          return createRobDeck();
-            case "Cthulhu":      return createCthulhuDeck();
-        }
-        return null;
-    }
-
-
-    /**
      * Creates the evolution card deck for the Alienoid monster.
      * @return the evolution card deck
      */
-    private static Deck<EvolutionCard> createAlienoidDeck() {
-        Deck<EvolutionCard> deck = new Deck<>();
-        return deck;
+    public static void createAlienoidDeck(Monster monster) {
+        Deck<EvolutionCard> deck = monster.getEvolutions();
+        deck.add(new EvolutionCard(
+                "Alien Scourge", true, EvolutionType.TEMPORARY_EVOLUTION,
+                "Gain 2★ stars",
+                new StatsChangeEffect(0, 0, 2,0))
+        );
     }
 
 
@@ -85,9 +87,13 @@ public class DeckFactory {
      * Creates the evolution card deck for the Gigazaur monster.
      * @return the evolution card deck
      */
-    private static Deck<EvolutionCard> createGigazaurDeck() {
-        Deck<EvolutionCard> deck = new Deck<>();
-        return deck;
+    public static void createGigazaurDeck(Monster monster) {
+        Deck<EvolutionCard> deck = monster.getEvolutions();
+        deck.add(new EvolutionCard(
+                "Radioactive Waste", true, EvolutionType.TEMPORARY_EVOLUTION,
+                "Gain 2⚡ energy and 1♥ heart",
+                new StatsChangeEffect(0, 0, 2,0))
+        );
     }
 
 
@@ -95,9 +101,13 @@ public class DeckFactory {
      * Creates the evolution card deck for the Kong monster.
      * @return the evolution card deck
      */
-    private static Deck<EvolutionCard> createKongDeck() {
-        Deck<EvolutionCard> deck = new Deck<>();
-        return deck;
+    public static void createKongDeck(Monster monster) {
+        Deck<EvolutionCard> deck = monster.getEvolutions();
+        deck.add(new EvolutionCard(
+                "Red Dawn", true, EvolutionType.TEMPORARY_EVOLUTION,
+                "All other Monsters lose 2♥ hearts",
+                new StatsChangeEffect(Target.OTHERS, EventType.IMMEDIATE, 0, -2, 0,0))
+        );
     }
 
 
@@ -105,9 +115,44 @@ public class DeckFactory {
      * Creates the evolution card deck for the Pumpkin Jack monster.
      * @return the evolution card deck
      */
-    private static Deck<EvolutionCard> createPumpkinJackDeck() {
-        Deck<EvolutionCard> deck = new Deck<>();
-        return deck;
+    public static void createPumpkinJackDeck(Monster monster) {
+        Deck<EvolutionCard> deck = monster.getEvolutions();
+        deck.add(new EvolutionCard(
+                "Trick or Threat", false, EvolutionType.PERMANENT_EVOLUTION,
+                "When you roll [ONE] [ONE] [ONE] all other Monsters must pay you 1⚡ energy or take 2 damage.",
+                new Effect() {
+                    @Override
+                    public void effect(Event event) {
+                        if (event.type == EventType.DICE_ROLL || event.type == EventType.DICE_REROLL) {
+                            DiceRollState state = (DiceRollState) event.game.getState();
+                            DiceResult result = state.diceRoll.getResult();
+                            if (result.ones >= 3) {
+                                for (Monster mon : event.game.getMonsters(Target.OTHERS)) {
+                                    event.sendMessage(mon, "Pay 1 energy or take 2 damage? (enter trick [pay] or threat [take damage])");
+                                    event.sendMessage(mon, "QUERY:TRICK_OR_THREAT");
+                                    try {
+                                        int energy = mon.getEnergy();
+                                        boolean trick = mon.getTerminal().readBoolean("trick", "threat",
+                                                "Please enter trick or threat!");
+                                        if (trick && energy > 0) {
+                                            mon.changeEnergy(-1);
+                                            event.owner.changeEnergy(+1);
+                                        } else {
+                                            if (energy == 0) {
+                                                event.sendMessage(mon, "You could not afford to pay 1⚡ energy, you took 2 damage instead!");
+                                            }
+                                            mon.changeHealth(-2);
+                                        }
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                        event.game.exit();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                })
+        );
     }
 
 
@@ -115,9 +160,32 @@ public class DeckFactory {
      * Creates the evolution card deck for the Rob monster.
      * @return the evolution card deck
      */
-    private static Deck<EvolutionCard> createRobDeck() {
-        Deck<EvolutionCard> deck = new Deck<>();
-        return deck;
+    public static void createRobDeck(Monster monster) {
+        Deck<EvolutionCard> deck = monster.getEvolutions();
+        deck.add(new EvolutionCard(
+                "Infinite Loop", false, EvolutionType.TEMPORARY_EVOLUTION,
+                "Play before rolling dice. During your Rolls, each time you roll [ENERGY], immediately gain 1⚡ energy for each [ENERGY] rolled and roll them again freely",
+                new PlayableEffect(EventType.DICE_ROLL) {
+                    @Override
+                    public void play(Event event) {
+                        DiceRollState state = (DiceRollState) event.game.getState();
+                        Dice[] roll = state.diceRoll.getDice();
+                        int energy = 0;
+                        for (int i = 0; i < roll.length; i++) {
+                            if (roll[i] == Dice.ENERGY) {
+                                energy++;
+                                roll[i] = Dice.roll(state.diceRoll.getRandom());
+                                i = 0;
+                            }
+                        }
+                        if (energy > 0) {
+                            event.owner.changeEnergy(energy);
+                            event.sendMessage(event.owner, "You rolled " + energy + " [ENERGY], gained " + energy + "⚡ energy, those dice were rerolled...");
+                        }
+                        event.owner.discardCard(event.card);
+                    }
+                })
+        );
     }
 
 
@@ -125,8 +193,22 @@ public class DeckFactory {
      * Creates the evolution card deck for the Cthulhu monster.
      * @return the evolution card deck
      */
-    private static Deck<EvolutionCard> createCthulhuDeck() {
-        Deck<EvolutionCard> deck = new Deck<>();
-        return deck;
+    public static void createCthulhuDeck(Monster monster) {
+        Deck<EvolutionCard> deck = monster.getEvolutions();
+        deck.add(new EvolutionCard(
+                "Sunken R'lyeh", true, EvolutionType.PERMANENT_EVOLUTION,
+                "At the start of your turn, gain 1 star if you are not in Tokyo",
+                new Effect() {
+                    @Override
+                    public void effect(Event event) {
+                        if (event.type == EventType.START_TURN) {
+                            if (event.owner != event.game.inTokyo) {
+                                event.owner.changeStars(1);
+                                event.sendMessage(event.owner, "You gained 1★ star for not being in Tokyo");
+                            }
+                        }
+                    }
+                })
+        );
     }
 }

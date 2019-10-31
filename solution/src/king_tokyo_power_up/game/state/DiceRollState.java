@@ -1,5 +1,7 @@
 package king_tokyo_power_up.game.state;
 
+import king_tokyo_power_up.game.card.Event;
+import king_tokyo_power_up.game.card.EventType;
 import king_tokyo_power_up.game.dice.DiceResult;
 import king_tokyo_power_up.game.dice.DiceRoll;
 import king_tokyo_power_up.game.Game;
@@ -60,11 +62,14 @@ public class DiceRollState implements GameState {
         diceRoll.rollAll();
 
         Monster monster = game.getCurrent();
+        monster.notify(game, EventType.DICE_ROLL);
+
         terminal = monster.getTerminal();
         terminal.writeString(getControllsString());
 
         while (rerolls > 0) {
             reroll(game);
+            monster.notify(game, EventType.DICE_REROLL);
         }
 
         DiceResult result = diceRoll.getResult();

@@ -10,18 +10,34 @@ public class EvolutionCard extends Card {
 
 
     /**
+     * Should the card be immediately discarded?
+     * Some temporary evolutions stick around for the rest of the turn.
+     * You can manually discard it in the effect by using
+     * {@link king_tokyo_power_up.game.monster.Monster#discardCard(Card)}
+     */
+    protected boolean discard;
+
+
+    /**
      * Creates a new abstract card.
      * @param name        the name of the card
      * @param description the description of the card
      */
-    public EvolutionCard(String name, String description, EvolutionType type, Effect effect) {
+    public EvolutionCard(String name, boolean discard, EvolutionType type, String description, Effect effect) {
         super(name, description, effect);
         this.type = type;
+        this.discard = discard;
     }
 
 
     @Override
     public boolean discard() {
-        return type == EvolutionType.TEMPORARY_EVOLUTION;
+        return discard;
+    }
+
+
+    @Override
+    public String toString() {
+        return name + ", " + type.toString() + ", " + description;
     }
 }

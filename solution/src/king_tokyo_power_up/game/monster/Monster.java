@@ -71,17 +71,17 @@ public class Monster {
         this.name = name;
         this.type = type;
         this.cards = new ArrayList<>();
+        this.evolutions = new Deck<>();
     }
 
 
     /**
-     * Set the evolution deck to be used by this monster.
-     * @param evolutions the evolution deck to set
+     * Get the evolution deck to be used by this monster.
+     * @return the evolution deck
      */
-    public void setEvolutionDeck(Deck<EvolutionCard> evolutions) {
-        this.evolutions = evolutions;
+    public Deck<EvolutionCard> getEvolutions() {
+        return evolutions;
     }
-
 
     /**
      * Get the current health of the monster.
@@ -173,9 +173,8 @@ public class Monster {
     public void evolve(Game game) {
         EvolutionCard card = evolutions.draw();
         if (card != null) {
-            immediate(game, card);
-            if (!card.discard())
-                cards.add(card);
+            addCard(game, card);
+            terminal.writeString("You got a new evolution:\n" + card.toString() + "\n");
         } else {
             terminal.writeString("Your evolution card deck is empty!\n");
         }
@@ -186,22 +185,10 @@ public class Monster {
      * Start turn event is called at the beginning the owners turn.
      * @param game the game state
      */
-    public void startTurn(Game game) {
+    public void notify(Game game, EventType type) {
         for (Card card : cards) {
-            Event event = new Event(this, card, game);
-            card.getEffect().startTurn(event);
-        }
-    }
-
-
-    /**
-     * Purchase event is called before the card owner is purchasing something.
-     * @param game the game state
-     */
-    public void purchase(Game game) {
-        for (Card card : cards) {
-            Event event = new Event(this, card, game);
-            card.getEffect().purchase(event);
+            Event event = new Event(type, this, card, game);
+            card.getEffect().effect(event);
         }
     }
 
@@ -213,8 +200,8 @@ public class Monster {
      */
     public void attack(Game game, Monster target) {
         for (Card card : cards) {
-            AttackEvent event = new AttackEvent(this, card, game, target);
-            card.getEffect().attack(event);
+            AttackEvent event = new AttackEvent(EventType.ATTACK, this, card, game, target);
+            card.getEffect().effect(event);
         }
     }
 
@@ -226,32 +213,32 @@ public class Monster {
      */
     public void attacked(Game game, Monster attacker) {
         for (Card card : cards) {
-            AttackEvent event = new AttackEvent(this, card, game, attacker);
-            card.getEffect().attacked(event);
+            AttackEvent event = new AttackEvent(EventType.ATTACKED, this, card, game, attacker);
+            card.getEffect().effect(event);
         }
     }
 
 
     /**
-     * Event callback is executed at the beginning the owners turn.
-     * @param game the game state
+     * Adds the given card to the list of cards.
+     * If the card is discarded upon retrieval then
+     * the immediate effect is carried out and discarded.
+     * @param card
      */
-    public void endTurn(Game game) {
-        for (Card card : cards) {
-            Event event = new Event(this, card, game);
-            card.getEffect().endTurn(event);
-        }
+    public void addCard(Game game, Card card) {
+        if (!card.discard())
+            cards.add(card);
+        Event event = new Event(EventType.IMMEDIATE, this, card, game);
+        card.getEffect().effect(event);
     }
 
 
     /**
-     * Immediate event callback is called directly upon use.
-     * Either automatically via discard card, or manually using a card.
-     * @param game the game state
+     * Discards the given card from the monsters hand.
+     * @param card the card to discard
      */
-    public void immediate(Game game, Card card) {
-        Event event = new Event(this, card, game);
-        card.getEffect().immediate(event);
+    public void discardCard(Card card) {
+        cards.remove(card);
     }
 
 
@@ -319,8 +306,15 @@ public class Monster {
         String inTokyoStatus = inTokyo ? " (in Tokyo)" : "";
         String monsterName = name + inTokyoStatus + ":\n";
         String spacing = Formatting.getSpaces(4);
+        String cardStatus = "";
+        if (cards.size() > 0) {
+            cardStatus = spacing + "The monster has the following cards:\n";
+            for (int i = 0; i < cards.size(); i++) {
+                cardStatus += spacing + "[" + i + "] " + cards.toString() + "\n";
+            }
+        }
         if (isAlive()) {
-            return monsterName + spacing + getStatsString() + "\n";
+            return monsterName + spacing + getStatsString() + "\n" + cardStatus;
         } else {
             return monsterName + spacing + "is dead (RIP)\n";
         }

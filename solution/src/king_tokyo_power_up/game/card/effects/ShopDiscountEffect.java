@@ -1,6 +1,7 @@
 package king_tokyo_power_up.game.card.effects;
 
 import king_tokyo_power_up.game.card.Event;
+import king_tokyo_power_up.game.card.EventType;
 import king_tokyo_power_up.game.state.ShopState;
 
 public class ShopDiscountEffect extends Effect {
@@ -16,10 +17,12 @@ public class ShopDiscountEffect extends Effect {
 
 
     @Override
-    public void purchase(Event event) {
-        ShopState state = (ShopState) event.game.getState();
-        if (!onlyCards || (state.purchaseOption > 0 && state.purchaseOption < 3)) {
-            state.discount(discount);
+    public void effect(Event event) {
+        if (event.type == EventType.PURCHASE) {
+            ShopState state = (ShopState) event.game.getState();
+            if (!onlyCards || (state.purchaseOption > 0 && state.purchaseOption < 3)) {
+                state.discount(discount);
+            }
         }
     }
 }

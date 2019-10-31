@@ -23,13 +23,21 @@ public class Event {
      */
     public final Card card;
 
+    /**
+     * The event type.
+     */
+    public final EventType type;
+
 
     /**
      * Creates a new event with an owner and the game state.
+     * @param type the type of event
      * @param owner the monster owner
+     * @param card the card
      * @param game the game state.
      */
-    public Event(Monster owner, Card card, Game game) {
+    public Event(EventType type, Monster owner, Card card, Game game) {
+        this.type = type;
         this.owner = owner;
         this.game = game;
         this.card = card;

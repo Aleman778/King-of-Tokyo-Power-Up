@@ -1,6 +1,7 @@
 package king_tokyo_power_up.game.state;
 
 import king_tokyo_power_up.game.Game;
+import king_tokyo_power_up.game.card.EventType;
 import king_tokyo_power_up.game.card.Target;
 import king_tokyo_power_up.game.monster.Monster;
 import king_tokyo_power_up.game.util.Terminal;
@@ -24,6 +25,7 @@ public class EndTurnState implements GameState {
     @Override
     public void update(Game game) {
         Monster monster = game.getCurrent();
+        monster.notify(game, EventType.END_TURN);
         Terminal terminal = monster.getTerminal();
         terminal.writeString(toString(game));
         terminal.writeString("QUERY:ENTER\n");

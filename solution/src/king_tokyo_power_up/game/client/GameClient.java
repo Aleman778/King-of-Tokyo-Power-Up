@@ -16,17 +16,17 @@ public class GameClient {
     /**
      * Used to communicate with the server.
      */
-    private Terminal terminal;
+    protected Terminal terminal;
 
     /**
      * The host address of this server.
      */
-    private InetAddress address;
+    protected InetAddress address;
 
     /**
      * The port used by this server.
      */
-    private int port = 2048;
+    protected int port = 2048;
 
 
     /**
@@ -41,6 +41,24 @@ public class GameClient {
      * Starts the client connects to the server.
      */
     public void start() {
+        boolean keepAlive = connect();
+        while (keepAlive) {
+            // Sleep zzz... reduce CPU usage by allowing other processes to run.
+            try {
+                Thread.sleep(1);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            keepAlive = communication();
+        }
+    }
+
+
+    /**
+     * Connects to the server.
+     * @return true if connected successfully, false otherwise
+     */
+    protected boolean connect() {
         try {
             Socket socket;
             if (address != null) {
@@ -51,6 +69,7 @@ public class GameClient {
             terminal.connect(socket);
         } catch (IOException e) {
             e.printStackTrace();
+            return false;
         }
         try {
             String name = terminal.readString();
@@ -58,29 +77,32 @@ public class GameClient {
             System.out.println("You are " + name + "!\nWaiting for other players to join...");
         } catch (IOException e) {
             e.printStackTrace();
-            return;
+            return false;
         }
-        while (true) {
-            // Sleep zzz... reduce CPU usage by allowing other processes to run.
-            try {
-                Thread.sleep(1);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+
+        return true;
+    }
+
+
+    /**
+     * The communication protocol with the server.
+     * @return true if connection should keep being alive
+     */
+    protected boolean communication() {
+        try {
+            String message = terminal.readString();
+            if (message.contains("QUERY")) {
+                terminal.writeLine();
+            } else if (message.equals("EXIT")) {
+                return false;
+            } else {
+                System.out.println(message);
             }
-            try {
-                String message = terminal.readString();
-                if (message.contains("QUERY")) {
-                    terminal.writeLine();
-                } else if (message.equals("EXIT")) {
-                    break;
-                } else {
-                    System.out.println(message);
-                }
-            } catch (IOException e) {
-                e.printStackTrace();
-                return;
-            }
+        } catch (IOException e) {
+            e.printStackTrace();
+            return false;
         }
+        return true;
     }
 
 

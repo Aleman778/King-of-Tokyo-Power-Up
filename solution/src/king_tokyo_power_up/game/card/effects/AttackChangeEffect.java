@@ -2,6 +2,7 @@ package king_tokyo_power_up.game.card.effects;
 
 import king_tokyo_power_up.game.card.AttackEvent;
 import king_tokyo_power_up.game.card.Event;
+import king_tokyo_power_up.game.card.EventType;
 import king_tokyo_power_up.game.state.ActionState;
 import king_tokyo_power_up.game.state.GameState;
 
@@ -23,8 +24,10 @@ public class AttackChangeEffect extends Effect {
 
 
     @Override
-    public void attacked(AttackEvent event) {
-        if (defense > 0) {
+    public void effect(Event evn) {
+        if (!(evn instanceof AttackEvent)) return;
+        AttackEvent event = (AttackEvent) evn;
+        if (defense > 0 && event.type == EventType.ATTACKED) {
             ActionState state = (ActionState) event.game.getState();
             state.result.claws -= defense;
             if (state.result.claws < 0) {
@@ -32,13 +35,7 @@ public class AttackChangeEffect extends Effect {
             }
             event.sendMessage(event.owner, "You have defended yourself against an attack by " + event.other.getName() + "!");
             event.sendMessage(event.other, "Your attack on " + event.owner.getName() + " was weakened by -" + defense + " damage!");
-        }
-    }
-
-
-    @Override
-    public void attack(AttackEvent event) {
-        if (strength > 0) {
+        } else if (strength > 0 && event.type == EventType.ATTACK) {
             ActionState state = (ActionState) event.game.getState();
             state.result.claws += strength;
             event.sendMessage(event.owner, "Your attack on " + event.other.getName() + " was strengthened by +" + strength + "damage!");

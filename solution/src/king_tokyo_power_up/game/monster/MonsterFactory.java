@@ -21,27 +21,27 @@ public class MonsterFactory {
     public static ArrayList<Monster> createMonsters() {
         ArrayList<Monster> monsters = new ArrayList<>();
         Monster alienoid = new Monster("Alienoid", "Alien");
-        alienoid.setEvolutionDeck(DeckFactory.createEvolutionDeck("Alienoid"));
+        DeckFactory.createAlienoidDeck(alienoid);
         monsters.add(alienoid);
 
         Monster gigazaur = new Monster("Gigazaur", "Mutant");
-        alienoid.setEvolutionDeck(DeckFactory.createEvolutionDeck("Gigazaur"));
+        DeckFactory.createGigazaurDeck(gigazaur);
         monsters.add(gigazaur);
 
         Monster kong = new Monster("Kong", "Mutant");
-        alienoid.setEvolutionDeck(DeckFactory.createEvolutionDeck("Kong"));
+        DeckFactory.createKongDeck(kong);
         monsters.add(kong);
 
         Monster pumpkinJack = new Monster("Pumpkin Jack", "Halloween");
-        alienoid.setEvolutionDeck(DeckFactory.createEvolutionDeck("Pumpkin Jack"));
+        DeckFactory.createPumpkinJackDeck(pumpkinJack);
         monsters.add(pumpkinJack);
 
         Monster rob = new Monster("Rob", "Robot");
-        alienoid.setEvolutionDeck(DeckFactory.createEvolutionDeck("Rob"));
+        DeckFactory.createRobDeck(rob);
         monsters.add(rob);
 
         Monster cthulhu = new Monster("Cthulhu", "Alien");
-        alienoid.setEvolutionDeck(DeckFactory.createEvolutionDeck("Cthulhu"));
+        DeckFactory.createCthulhuDeck(cthulhu);
         monsters.add(cthulhu);
 
         return monsters;

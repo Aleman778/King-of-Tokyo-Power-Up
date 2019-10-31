@@ -1,6 +1,7 @@
 package king_tokyo_power_up.game.state;
 
 import king_tokyo_power_up.game.Game;
+import king_tokyo_power_up.game.card.EventType;
 import king_tokyo_power_up.game.card.Target;
 import king_tokyo_power_up.game.monster.Monster;
 import king_tokyo_power_up.game.util.Terminal;
@@ -29,7 +30,7 @@ public class StartTurnState implements GameState {
             monster = game.getCurrent();
         } while (!monster.isAlive());
 
-
+        monster.notify(game, EventType.START_TURN);
         Terminal term = monster.getTerminal();
         if (monster == game.inTokyo) {
             monster.changeStars(1);

@@ -59,7 +59,9 @@ public class CardShop {
     public void reset() {
         for (int i = 0; i < 3; i++) {
             StoreCard card = deck.draw();
-            deck.add(stock[i]);
+            if (stock[i] != null) {
+                deck.add(stock[i]);
+            }
             stock[i] = card;
         }
     }

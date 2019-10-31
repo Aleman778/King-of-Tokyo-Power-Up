@@ -15,6 +15,7 @@ public class DiceRoll {
      * The random number generator to use.
      */
     private Random random;
+
     /**
      * The dice to roll.
      */
@@ -55,6 +56,24 @@ public class DiceRoll {
             throw new IllegalArgumentException("The id " + id + " is out of range, expected 0 through " + (dice.length - 1));
         }
         dice[id] = Dice.roll(random);
+    }
+
+
+    /**
+     * Get the dice rolled.
+     * @return the dice rolled.
+     */
+    public Dice[] getDice() {
+        return dice;
+    }
+
+
+    /**
+     * Get the random number generator used.
+     * @return the rng object
+     */
+    public Random getRandom() {
+        return random;
     }
 
 
