@@ -69,11 +69,15 @@ public class Terminal {
 
 
     /**
+     * If there is text buffered from between the previous
+     * and this request, then that data will be consumed first.
      * Busy wait for the next line from a scanner.
      * @return the next line entered
      */
     public String nextLine() {
         if (scanner != null) {
+            //Clears the buffered data.
+            scanner = new Scanner(System.in);
             while (!scanner.hasNextLine()) {
                 // Busy wait until next response
                 // Sleep zzz... reduce CPU usage by allowing other processes to run.
