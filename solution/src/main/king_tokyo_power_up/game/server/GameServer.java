@@ -17,37 +17,37 @@ public class GameServer {
     /**
      * The state of the king_tokyo_power_up.game.
      */
-    private Game game;
+    protected Game game;
 
     /**
      * The server socket host.
      */
-    private ServerSocket socket;
+    protected ServerSocket socket;
 
     /**
      * The scanner is used to provide user input when configuring server.
      */
-    private Terminal terminal;
+    protected Terminal terminal;
 
     /**
      * This king_tokyo_power_up.game server player capacity.
      */
-    private int maxPlayers = 2;
+    protected int maxPlayers = 2;
 
     /**
      * The number of players that have joined the server.
      */
-    private int joinedPlayers = 0;
+    protected int joinedPlayers = 0;
 
     /**
      * The host address of this server.
      */
-    private InetAddress address;
+    protected InetAddress address;
 
     /**
      * The port used by this server.
      */
-    private int port = 2048;
+    protected int port = 2048;
 
 
     /**
@@ -148,5 +148,14 @@ public class GameServer {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+
+    /**
+     * Get the game state object.
+     * @return the state of the game
+     */
+    public Game getGame() {
+        return game;
     }
 }
