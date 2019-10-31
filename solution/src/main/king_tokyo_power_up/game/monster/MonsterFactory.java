@@ -15,7 +15,7 @@ public class MonsterFactory {
 
 
     /**
-     * Creates a list of all the monsters in this game.
+     * Creates a list of all the monsters in this king_tokyo_power_up.game.
      * @return the list of all monsters
      */
     public static ArrayList<Monster> createMonsters() {

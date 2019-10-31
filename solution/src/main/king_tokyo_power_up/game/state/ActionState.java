@@ -46,7 +46,7 @@ public class ActionState implements GameState {
     private Terminal terminal;
 
     /**
-     * The state of the game.
+     * The state of the king_tokyo_power_up.game.
      */
     private Game game;
 
@@ -64,7 +64,7 @@ public class ActionState implements GameState {
      * The update method acts according to the rules given in
      * requirement 12 (also defined in class description)
      * and the provided dice result.
-     * @param game the state of the game
+     * @param game the state of the king_tokyo_power_up.game
      */
     @Override
     public void update(Game game) {
@@ -209,7 +209,7 @@ public class ActionState implements GameState {
             terminal.writeString("You were attacked by " + monster.getName() + " and lost " + result.claws + " hp\n");
             terminal.writeString("You have " + target.getHealthString() + " health left!\n");
         } else {
-            terminal.writeString("You were killed by " + monster.getName() + " and lost the game!\n");
+            terminal.writeString("You were killed by " + monster.getName() + " and lost the king_tokyo_power_up.game!\n");
         }
     }
 
@@ -225,7 +225,7 @@ public class ActionState implements GameState {
 
     /**
      * This is a silent state i.e. does not print anything.
-     * @param game the state of the game
+     * @param game the state of the king_tokyo_power_up.game
      * @return empty string
      */
     @Override

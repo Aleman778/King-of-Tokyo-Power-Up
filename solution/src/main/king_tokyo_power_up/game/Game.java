@@ -14,8 +14,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 
 /**
- * The game class holds information about an ongoing game.
- * This class holds the current state of the game.
+ * The king_tokyo_power_up.game class holds information about an ongoing king_tokyo_power_up.game.
+ * This class holds the current state of the king_tokyo_power_up.game.
  */
 public class Game {
     /**
@@ -34,7 +34,7 @@ public class Game {
     public static final int MAX_PLAYERS = 6;
 
     /**
-     * The current game state.
+     * The current king_tokyo_power_up.game state.
      */
     public GameState state;
 
@@ -44,7 +44,7 @@ public class Game {
     public CardShop shop;
 
     /**
-     * List of the monsters in this game i.e. the players.
+     * List of the monsters in this king_tokyo_power_up.game i.e. the players.
      */
     private ArrayList<Monster> monsters;
 
@@ -64,13 +64,13 @@ public class Game {
     public int players;
 
     /**
-     * Is the game still running?
+     * Is the king_tokyo_power_up.game still running?
      */
     private boolean running;
 
 
     /**
-     * Constructs a new game.
+     * Constructs a new king_tokyo_power_up.game.
      */
     public Game() {
         monsters = new ArrayList<>();
@@ -80,7 +80,7 @@ public class Game {
 
 
     /**
-     * Sets up the game with the specific number of players.
+     * Sets up the king_tokyo_power_up.game with the specific number of players.
      * The setup process: (Requirement 1 - 6)
      * 1. [Requirement 1] Each player is assigned a monster.
      *      - [Requirement 2] Sets victory points to 0 (done during creation).
@@ -101,9 +101,9 @@ public class Game {
 
 
     /**
-     * Starts the game:
+     * Starts the king_tokyo_power_up.game:
      * 1. Remove monsters if not all players have joined.
-     * 2. [Requirement 6] Randomise which monster starts the game.
+     * 2. [Requirement 6] Randomise which monster starts the king_tokyo_power_up.game.
      * 3. Sets the initial state to StartTurnState and updates it.
      * @param players the number of players actually playing
      */
@@ -128,7 +128,7 @@ public class Game {
     }
 
     /**
-     * Updates the game state, should progress to the next state.
+     * Updates the king_tokyo_power_up.game state, should progress to the next state.
      */
     public void update() {
         state.update(this);
@@ -136,7 +136,7 @@ public class Game {
 
 
     /**
-     * Exits the game used when an error has occurred or server
+     * Exits the king_tokyo_power_up.game used when an error has occurred or server
      * runs the exit command.
      */
     public void exit() {
@@ -147,7 +147,7 @@ public class Game {
 
 
     /**
-     * Set the game state.
+     * Set the king_tokyo_power_up.game state.
      * @param state the state to set
      */
     public void setState(GameState state) {
@@ -156,8 +156,8 @@ public class Game {
 
 
     /**
-     * Get the current state of the game.
-     * @return the state of the game.
+     * Get the current state of the king_tokyo_power_up.game.
+     * @return the state of the king_tokyo_power_up.game.
      */
     public GameState getState() {
         return state;
@@ -215,8 +215,8 @@ public class Game {
 
 
     /**
-     * Returns all the monsters in this game.
-     * @return the monsters in game.
+     * Returns all the monsters in this king_tokyo_power_up.game.
+     * @return the monsters in king_tokyo_power_up.game.
      */
     public ArrayList<Monster> getAllMonsters() {
         return monsters;
@@ -225,7 +225,7 @@ public class Game {
 
     /**
      * Returns the current monster.
-     * @return the monster null if game has not started yet.
+     * @return the monster null if king_tokyo_power_up.game has not started yet.
      */
     public Monster getCurrent() {
         if (current == -1)
@@ -235,7 +235,7 @@ public class Game {
 
 
     /**
-     * Get the card shop in this game.
+     * Get the card shop in this king_tokyo_power_up.game.
      * @return the card shop object
      */
     public CardShop getShop() {

@@ -5,7 +5,7 @@ package king_tokyo_power_up.game.card;
  */
 public enum EvolutionType {
     /**
-     * Permanent evolution is an evolution that you keep throughout the game.
+     * Permanent evolution is an evolution that you keep throughout the king_tokyo_power_up.game.
      */
     PERMANENT_EVOLUTION("Permanent Evolution"),
 

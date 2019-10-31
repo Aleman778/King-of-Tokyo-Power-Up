@@ -52,7 +52,7 @@ public class StartTurnState implements GameState {
     /**
      * To string method tells the players that it is his or hers turn and displays
      * the stats of all the players i.e. health, energy etc.
-     * @param game the state of the game
+     * @param game the state of the king_tokyo_power_up.game
      * @return the string described above
      */
     @Override

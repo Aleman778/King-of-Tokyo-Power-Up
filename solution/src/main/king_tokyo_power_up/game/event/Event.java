@@ -5,7 +5,7 @@ import king_tokyo_power_up.game.card.Card;
 import king_tokyo_power_up.game.monster.Monster;
 
 /**
- * Event class holds the owner of the event, card owning this effect and the general game state.
+ * Event class holds the owner of the event, card owning this effect and the general king_tokyo_power_up.game state.
  * This event class is used to give context to an {@link king_tokyo_power_up.game.card.effects.Effect}.
  */
 public class Event {
@@ -15,7 +15,7 @@ public class Event {
     public final Monster owner;
 
     /**
-     * The game object holding the state of the game.
+     * The king_tokyo_power_up.game object holding the state of the king_tokyo_power_up.game.
      */
     public final Game game;
 
@@ -31,11 +31,11 @@ public class Event {
 
 
     /**
-     * Creates a new event with an owner and the game state.
+     * Creates a new event with an owner and the king_tokyo_power_up.game state.
      * @param type the type of event
      * @param owner the monster owner
      * @param card the card
-     * @param game the game state.
+     * @param game the king_tokyo_power_up.game state.
      */
     public Event(EventType type, Monster owner, Card card, Game game) {
         this.type = type;

@@ -1,7 +1,7 @@
 package king_tokyo_power_up.game.event;
 
 /**
- * The different types of events in the game.
+ * The different types of events in the king_tokyo_power_up.game.
  */
 public enum EventType {
     START_TURN,

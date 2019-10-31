@@ -54,7 +54,7 @@ public class DiceRollState implements GameState {
      * 3. [Requirement 10] Reroll the selected dice
      * 4. [Requirement 11] Repeat step 2 and 3 once (effect can alter the number or rerolls)
      * 3. Displays the result of the dice roll.
-     * @param game the state of the game
+     * @param game the state of the king_tokyo_power_up.game
      */
     @Override
     public void update(Game game) {
@@ -80,7 +80,7 @@ public class DiceRollState implements GameState {
     /**
      * Rerolls the dice, returns true if the monster wants
      * to skip rerolling.
-     * @param game the state of the game
+     * @param game the state of the king_tokyo_power_up.game
      * @return true for skipping rerolling.
      */
     public void reroll(Game game) {
@@ -113,7 +113,7 @@ public class DiceRollState implements GameState {
 
     /**
      * Returns the status of the rolled dice.
-     * @param game the state of the game
+     * @param game the state of the king_tokyo_power_up.game
      * @return string containing which dice was rolled.
      */
     @Override

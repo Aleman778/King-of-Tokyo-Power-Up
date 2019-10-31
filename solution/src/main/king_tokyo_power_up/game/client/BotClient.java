@@ -12,7 +12,7 @@ public class BotClient extends GameClient {
     private Random random;
 
     /**
-     * Creates a new game client.
+     * Creates a new king_tokyo_power_up.game client.
      *
      * @param scanner
      */

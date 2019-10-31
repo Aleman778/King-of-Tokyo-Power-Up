@@ -14,11 +14,11 @@ public class AttackEvent extends Event {
 
 
     /**
-     * Creates a new event with an owner and the game state.
+     * Creates a new event with an owner and the king_tokyo_power_up.game state.
      * @param type the type of event
      * @param owner the monster owner
      * @param card the card
-     * @param game the game state.
+     * @param game the king_tokyo_power_up.game state.
      */
     public AttackEvent(EventType type, Monster owner, Card card, Game game, Monster other) {
         super(type, owner, card, game);

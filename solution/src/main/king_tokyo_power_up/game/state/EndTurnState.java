@@ -12,15 +12,15 @@ import java.io.IOException;
  * The end of the current players turn [Requirement 15], this gives an overview of the stats
  * resets the loop so that StartTurnState changes the current monster to the next.
  * This state is also responsible for checking the following victory conditions:
- * - [Requirement 16] First monster to get 20 stars win the game
- * - [Requirement 17] The sole surviving monster wins the game (other monsters at 0 or less health)
- * - [Requirement 18] A monster that reaches 0 or less health is out of the game
- * If any of the victory conditions have been met than the winner is announced and game exits.
+ * - [Requirement 16] First monster to get 20 stars win the king_tokyo_power_up.game
+ * - [Requirement 17] The sole surviving monster wins the king_tokyo_power_up.game (other monsters at 0 or less health)
+ * - [Requirement 18] A monster that reaches 0 or less health is out of the king_tokyo_power_up.game
+ * If any of the victory conditions have been met than the winner is announced and king_tokyo_power_up.game exits.
  */
 public class EndTurnState implements GameState {
     /**
      *
-     * @param game the state of the game
+     * @param game the state of the king_tokyo_power_up.game
      */
     @Override
     public void update(Game game) {
@@ -42,8 +42,8 @@ public class EndTurnState implements GameState {
 
     /**
      * Checks the victory conditions based on requirement 16 - 18.
-     * If there is a winner monster then this is announced and the game is exited.
-     * @param game the state of the game
+     * If there is a winner monster then this is announced and the king_tokyo_power_up.game is exited.
+     * @param game the state of the king_tokyo_power_up.game
      */
     public void checkVictoryConditions(Game game) {
         Monster winner = getWinningMonster(game);
@@ -66,7 +66,7 @@ public class EndTurnState implements GameState {
 
     /**
      * Get the monster who is victorious, if none is null is returned.
-     * @param game the state of the game
+     * @param game the state of the king_tokyo_power_up.game
      * @return the monster who is winning, null if none
      */
     public Monster getWinningMonster(Game game) {
@@ -81,7 +81,7 @@ public class EndTurnState implements GameState {
     /**
      * Get the winning monster with 20 or more stars [Requirement 16].
      * If no monster has at least 20 stars then null is returned.
-     * @param game the state of the game
+     * @param game the state of the king_tokyo_power_up.game
      * @return the monster with 20 or more stars, if none then null is returned
      */
     public Monster getMonster20Stars(Game game) {
@@ -97,7 +97,7 @@ public class EndTurnState implements GameState {
     /**
      * Get the last standing monster if there are multiple
      * alive monsters then null is returned [Requirement 17].
-     * @param game the state of the game
+     * @param game the state of the king_tokyo_power_up.game
      * @return the last standing monster
      */
     public Monster getLastStandingMonster(Game game) {

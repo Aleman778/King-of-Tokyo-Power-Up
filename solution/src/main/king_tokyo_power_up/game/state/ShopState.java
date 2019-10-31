@@ -29,7 +29,7 @@ public class ShopState implements GameState {
     public CardShop shop;
 
     /**
-     * The state of the game.
+     * The state of the king_tokyo_power_up.game.
      */
     private Game game;
 
@@ -46,7 +46,7 @@ public class ShopState implements GameState {
 
     /**
      * The update method is where the current monster can purchase cards.
-     * @param game the state of the game
+     * @param game the state of the king_tokyo_power_up.game
      */
     @Override
     public void update(Game game) {

@@ -186,7 +186,7 @@ public class Monster {
 
     /**
      * Start turn event is called at the beginning the owners turn.
-     * @param game the game state
+     * @param game the king_tokyo_power_up.game state
      */
     public void notify(Game game, EventType type) {
         for (Card card : cards) {
@@ -198,7 +198,7 @@ public class Monster {
 
     /**
      * Attack event callback is called when the card owner is attacking another monster.
-     * @param game the game state
+     * @param game the king_tokyo_power_up.game state
      * @param target the monster who you are attacking
      */
     public void attack(Game game, Monster target) {
@@ -211,7 +211,7 @@ public class Monster {
 
     /**
      * Attacked event callback is called when the card owner is attacked by another monster.
-     * @param game the game state
+     * @param game the king_tokyo_power_up.game state
      * @param attacker the monster who attacked you
      */
     public void attacked(Game game, Monster attacker) {

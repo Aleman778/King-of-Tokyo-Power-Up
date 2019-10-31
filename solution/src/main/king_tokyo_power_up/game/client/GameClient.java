@@ -9,7 +9,7 @@ import java.net.SocketException;
 import java.util.Scanner;
 
 /**
- * The game client is used by players to interact
+ * The king_tokyo_power_up.game client is used by players to interact
  * with the server via a connected terminal.
  */
 public class GameClient {
@@ -30,7 +30,7 @@ public class GameClient {
 
 
     /**
-     * Creates a new game client.
+     * Creates a new king_tokyo_power_up.game client.
      */
     public GameClient(Scanner scanner) {
         terminal = new Terminal("", scanner);

@@ -36,7 +36,7 @@ public class KingTokyoPowerUp {
     private static final int MENU_START_BOT_CLIENT = 3;
 
     /**
-     * Menu option: exits the game.
+     * Menu option: exits the king_tokyo_power_up.game.
      */
     private static final int MENU_EXIT_GAME = 4;
 
@@ -122,14 +122,14 @@ public class KingTokyoPowerUp {
 
     /**
      * Main menu function prints the menu options and lets the user decide
-     * what to do, can either start game as a server, client, bot client or exit.
+     * what to do, can either start king_tokyo_power_up.game as a server, client, bot client or exit.
      */
     public void mainMenu() {
         terminal.writeString("MainMenu: Select one option from 1 through 4\n");
         terminal.writeString("\t- 1: Host a new server\n");
         terminal.writeString("\t- 2: Connect to the server\n");
         terminal.writeString("\t- 3: Connect a bot the the server\n");
-        terminal.writeString("\t- 4: Exit the game\n");
+        terminal.writeString("\t- 4: Exit the king_tokyo_power_up.game\n");
         int option = -1;
         while (option < 1) {
             try {

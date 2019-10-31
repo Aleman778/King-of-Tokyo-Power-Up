@@ -11,11 +11,11 @@ import java.net.Socket;
 import java.util.Scanner;
 
 /**
- * The game server handles communications with other clients and also holds the game state.
+ * The king_tokyo_power_up.game server handles communications with other clients and also holds the king_tokyo_power_up.game state.
  */
 public class GameServer {
     /**
-     * The state of the game.
+     * The state of the king_tokyo_power_up.game.
      */
     private Game game;
 
@@ -30,7 +30,7 @@ public class GameServer {
     private Terminal terminal;
 
     /**
-     * This game server player capacity.
+     * This king_tokyo_power_up.game server player capacity.
      */
     private int maxPlayers = 2;
 
@@ -51,7 +51,7 @@ public class GameServer {
 
 
     /**
-     * Constructs a new game server.
+     * Constructs a new king_tokyo_power_up.game server.
      * Use first {@link GameServer#configure()} to configure the server.
      * Use {@link GameServer#start()} to start the server.
      */
