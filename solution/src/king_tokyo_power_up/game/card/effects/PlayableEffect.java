@@ -1,8 +1,7 @@
 package king_tokyo_power_up.game.card.effects;
 
-import king_tokyo_power_up.game.card.AttackEvent;
-import king_tokyo_power_up.game.card.Event;
-import king_tokyo_power_up.game.card.EventType;
+import king_tokyo_power_up.game.event.Event;
+import king_tokyo_power_up.game.event.EventType;
 import king_tokyo_power_up.game.util.Terminal;
 
 import java.io.IOException;

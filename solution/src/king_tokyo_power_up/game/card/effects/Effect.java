@@ -1,7 +1,6 @@
 package king_tokyo_power_up.game.card.effects;
 
-import king_tokyo_power_up.game.card.AttackEvent;
-import king_tokyo_power_up.game.card.Event;
+import king_tokyo_power_up.game.event.Event;
 
 public abstract class Effect {
 

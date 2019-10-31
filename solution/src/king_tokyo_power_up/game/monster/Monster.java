@@ -2,6 +2,9 @@ package king_tokyo_power_up.game.monster;
 
 import king_tokyo_power_up.game.Game;
 import king_tokyo_power_up.game.card.*;
+import king_tokyo_power_up.game.event.AttackEvent;
+import king_tokyo_power_up.game.event.Event;
+import king_tokyo_power_up.game.event.EventType;
 import king_tokyo_power_up.game.util.Formatting;
 import king_tokyo_power_up.game.util.Terminal;
 

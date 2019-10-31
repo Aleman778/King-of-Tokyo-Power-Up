@@ -3,6 +3,8 @@ package king_tokyo_power_up.game.card;
 import king_tokyo_power_up.game.card.effects.*;
 import king_tokyo_power_up.game.dice.Dice;
 import king_tokyo_power_up.game.dice.DiceResult;
+import king_tokyo_power_up.game.event.Event;
+import king_tokyo_power_up.game.event.EventType;
 import king_tokyo_power_up.game.monster.Monster;
 import king_tokyo_power_up.game.state.DiceRollState;
 

@@ -1,10 +1,9 @@
 package king_tokyo_power_up.game.card.effects;
 
-import king_tokyo_power_up.game.card.AttackEvent;
-import king_tokyo_power_up.game.card.Event;
-import king_tokyo_power_up.game.card.EventType;
+import king_tokyo_power_up.game.event.AttackEvent;
+import king_tokyo_power_up.game.event.Event;
+import king_tokyo_power_up.game.event.EventType;
 import king_tokyo_power_up.game.state.ActionState;
-import king_tokyo_power_up.game.state.GameState;
 
 
 /**

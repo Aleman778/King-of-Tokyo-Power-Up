@@ -1,7 +1,6 @@
 package king_tokyo_power_up.game.state;
 
-import king_tokyo_power_up.game.card.Event;
-import king_tokyo_power_up.game.card.EventType;
+import king_tokyo_power_up.game.event.EventType;
 import king_tokyo_power_up.game.dice.DiceResult;
 import king_tokyo_power_up.game.dice.DiceRoll;
 import king_tokyo_power_up.game.Game;
