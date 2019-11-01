@@ -97,6 +97,7 @@ public class ShopState implements GameState {
             Card card = shop.purchase(purchaseOption);
             monster.changeEnergy(-energyCost);
             monster.addCard(game, card);
+            terminal.writeString("Thank you for your purchase! Do you want anything else?\n");
         } else {
             terminal.writeString("Cannot afford the that card! Please choose something else!\n");
         }

@@ -9,6 +9,7 @@ public enum EventType {
     DICE_REROLL,
     ATTACK,
     ATTACKED,
+    LEAVE_TOKYO,
     PURCHASE,
     END_TURN,
     IMMEDIATE,

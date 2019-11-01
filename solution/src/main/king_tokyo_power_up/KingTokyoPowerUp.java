@@ -129,7 +129,7 @@ public class KingTokyoPowerUp {
         terminal.writeString("\t- 1: Host a new server\n");
         terminal.writeString("\t- 2: Connect to the server\n");
         terminal.writeString("\t- 3: Connect a bot the the server\n");
-        terminal.writeString("\t- 4: Exit the king_tokyo_power_up.game\n");
+        terminal.writeString("\t- 4: Exit the game\n");
         int option = -1;
         while (option < 1) {
             try {

@@ -3,12 +3,16 @@ package king_tokyo_power_up.game.card;
 import king_tokyo_power_up.game.card.effects.*;
 import king_tokyo_power_up.game.dice.Dice;
 import king_tokyo_power_up.game.dice.DiceResult;
+import king_tokyo_power_up.game.dice.DiceRoll;
+import king_tokyo_power_up.game.event.AttackEvent;
 import king_tokyo_power_up.game.event.Event;
 import king_tokyo_power_up.game.event.EventType;
 import king_tokyo_power_up.game.monster.Monster;
+import king_tokyo_power_up.game.state.ActionState;
 import king_tokyo_power_up.game.state.DiceRollState;
 
 import java.io.IOException;
+import java.util.Random;
 
 /**
  * The deck factory class is used to create decks for
@@ -39,7 +43,7 @@ public class DeckFactory {
         );
         deck.add(new StoreCard(
                 "Alpha Monster", 5, false,
-                "Gain 1★ star when you attack",
+                "Gain +1★ star when you attack",
                 new Effect() {
                     // Should only give one star when attacking any number of monsters.
                     private boolean disabled = false;
@@ -59,13 +63,122 @@ public class DeckFactory {
         );
         deck.add(new StoreCard(
                 "Apartment Building", 5, true,
-                "Gain 3★ stars",
+                "Gain +3★ stars",
                 new StatsChangeEffect(0,0,3,0))
         );
         deck.add(new StoreCard(
-                "Armour Plating", 5, true,
+                "Armour Plating", 5, false,
                 "When attacked ignore 1 damage",
                 new AttackChangeEffect(1, 0))
+        );
+        deck.add(new StoreCard(
+                "Background Dweller", 4, false,
+                "You can always reroll any [3] you have",
+                new Effect() {
+                    @Override
+                    public void effect(Event event) {
+                        if (event.type == EventType.DICE_ROLL || event.type == EventType.DICE_REROLL) {
+                            DiceRollState state = (DiceRollState) event.game.getState();
+                            Dice[] dice = state.diceRoll.getDice();
+                            for (int i = 0; i < dice.length; i++) {
+                                if (dice[i] == Dice.THREE) {
+                                    event.sendMessage(event.owner, "You rolled a three do you want to reroll the dice? (enter Yes or No)?");
+                                    event.sendMessage(event.owner, "QUERY:PLAY_CARD");
+                                    try {
+                                        if (event.owner.getTerminal().readBoolean("Yes", "No", "Please enter Yes or No\n")) {
+                                            dice[i] = Dice.roll(new Random());
+                                            i = 0;
+                                        }
+                                    } catch (IOException e) {
+                                        e.printStackTrace();
+                                        event.game.exit();
+                                    }
+                                }
+                            }
+                        }
+                    }
+                })
+        );
+        deck.add(new StoreCard(
+                "Burrowing", 5, false,
+                "Deal 1 extra damage on Tokyo. Deal 1 damage when yielding Tokyo to the monster taking it.",
+                new Effect() {
+                    private Monster target;
+                    @Override
+                    public void effect(Event event) {
+                        if (event instanceof AttackEvent) {
+                            AttackEvent attackEvent = (AttackEvent) event;
+                            if (event.type == EventType.ATTACK) {
+                                if (event.game.inTokyo != event.owner) {
+                                    attackEvent.other.changeHealth(-1);
+                                    attackEvent.sendMessage(attackEvent.other, "You took 1 extra damage");
+                                    attackEvent.sendMessage(attackEvent.owner, "You dealt 1 extra damage");
+                                }
+
+                            } else if (event.type == EventType.ATTACKED) {
+                                if (event.game.inTokyo == event.owner) {
+                                    target = attackEvent.other;
+                                }
+                            }
+                        } else if (event.type == EventType.LEAVE_TOKYO) {
+                            if (target != null) {
+                                target.changeHealth(-1);
+                                event.sendMessage(target, "You took 1 damage for entering Tokyo");
+                                event.sendMessage(event.owner, "You dealt 1 damage to monster entering Tokyo");
+                                target = null;
+                            }
+                        }
+                    }
+                })
+        );
+        deck.add(new StoreCard(
+                "Commuter Train", 4, true,
+                "Gain +2★ stars",
+                new StatsChangeEffect(0,0,2,0))
+        );
+        deck.add(new StoreCard(
+                "Camouflage", 3, false,
+                "If you take damage roll a die for each damage point. On a [Heart] you do not take that damage point.",
+                new Effect() {
+                    @Override
+                    public void effect(Event event) {
+                        if (event.type == EventType.ATTACKED) {
+                            ActionState state = (ActionState) event.game.getState();
+                            int damage = state.result.claws;
+                            DiceRoll roll = new DiceRoll(new Random(), damage);
+                            roll.rollAll();
+                            int ignoreDamage = roll.getResult().hearts;
+                            state.result.claws -= ignoreDamage;
+                            if (state.result.claws < 0)
+                                state.result.claws = 0;
+                            event.sendMessage(event.owner, "You are about to take " + damage + " damage" +
+                                    ", you rolled " + damage + " dice:\n" + roll.toString() + "\nYou shielded " + ignoreDamage + " damage point(s)!");
+                        }
+                    }
+                }
+        ));
+        deck.add(new StoreCard(
+                "Complete Destruction", 3, true,
+                "If you roll [1][2][3][Heart][Attack][Energy] gain +9★ stars in addition to the regular results.",
+                new Effect() {
+                    @Override
+                    public void effect(Event event) {
+                        if (event.type == EventType.DICE_ROLL) {
+                            DiceRollState state = (DiceRollState) event.game.getState();
+                            DiceResult result = state.diceRoll.getResult();
+                            if (result.ones >= 1 && result.twos >= 1 && result.threes >= 1 &&
+                                result.hearts >= 1 &&result.claws >= 1 &&result.energies >= 1) {
+                                event.owner.changeStars(9);
+                                event.sendMessage(event.owner, "You rolled [1][2][3][Heart][Attack][Energy] and gained +9★ stars!");
+                            }
+                        }
+                    }
+                })
+        );
+        deck.add(new StoreCard(
+                "Corner Stone", 3, true,
+                "Gain +1★ stars",
+                new StatsChangeEffect(0,0,1,0))
         );
         return deck;
     }
@@ -94,7 +207,7 @@ public class DeckFactory {
         deck.add(new EvolutionCard(
                 "Radioactive Waste", true, EvolutionType.TEMPORARY_EVOLUTION,
                 "Gain 2⚡ energy and 1♥ heart",
-                new StatsChangeEffect(0, 0, 2,0))
+                new StatsChangeEffect(0, 1, 0,2))
         );
     }
 
@@ -198,7 +311,7 @@ public class DeckFactory {
     public static void createCthulhuDeck(Monster monster) {
         Deck<EvolutionCard> deck = monster.getEvolutions();
         deck.add(new EvolutionCard(
-                "Sunken R'lyeh", true, EvolutionType.PERMANENT_EVOLUTION,
+                "Sunken R'lyeh", false, EvolutionType.PERMANENT_EVOLUTION,
                 "At the start of your turn, gain 1 star if you are not in Tokyo",
                 new Effect() {
                     @Override

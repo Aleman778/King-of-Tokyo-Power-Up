@@ -3,6 +3,7 @@ package king_tokyo_power_up.game.state;
 import king_tokyo_power_up.game.Game;
 import king_tokyo_power_up.game.card.Target;
 import king_tokyo_power_up.game.dice.DiceResult;
+import king_tokyo_power_up.game.event.EventType;
 import king_tokyo_power_up.game.monster.Monster;
 import king_tokyo_power_up.game.util.Terminal;
 
@@ -182,6 +183,7 @@ public class ActionState implements GameState {
         targetTerminal.writeString("QUERY:LEAVE_TOKYO\n");
         try {
             if (targetTerminal.readBoolean("yes", "no", "Please enter Yes or No!\nQUERY:LEAVE_TOKYO\n")) {
+                monster.notify(game, EventType.LEAVE_TOKYO);
                 game.inTokyo = null;
                 enterTokyo();
             }
