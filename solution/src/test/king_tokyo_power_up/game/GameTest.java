@@ -1,18 +1,14 @@
 package king_tokyo_power_up.game;
 
+import king_tokyo_power_up.game.card.StoreCard;
 import king_tokyo_power_up.game.client.ClientTest;
-import king_tokyo_power_up.game.client.GameClient;
 import king_tokyo_power_up.game.monster.Monster;
-import king_tokyo_power_up.game.server.GameServer;
 import static org.junit.Assert.*;
 
 import king_tokyo_power_up.game.server.ServerTest;
+import king_tokyo_power_up.game.state.StartTurnState;
 import org.junit.Before;
 import org.junit.Test;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.util.Scanner;
 
 /**
  * GameTest tests the Game class and the Requirements 1 - 6.
@@ -23,6 +19,13 @@ import java.util.Scanner;
  *      • Start with 3 cards face up (available for purchase).
  * 5. Shuffle the evolution cards for the respective monsters
  * 6. Randomise which monster starts the game.
+ *
+ * Notes:
+ * Requirement 4 cannot be tested due to randomness behaviour of Collection.shuffle
+ * Requirement 5 cannot be tested since I only have implemented 1 evolution card at the moment.
+ * Requirement 6 cannot be tested due to randomness behaviour of Collection.shuffle
+ * Note: You could provide a custom Random to Collection.shuffle class that has deterministic
+ *       behaviour but that removes the randomness making the requirement not satisfied anymore.
  */
 public class GameTest {
     /**
@@ -63,6 +66,11 @@ public class GameTest {
         server.start();
     }
 
+
+    /**
+     * [Requirement 1]
+     * Test every player are assigned one monster
+     */
     @Test
     public void testMonsters() {
         for (Monster mon : game.getAllMonsters()) {
@@ -72,11 +80,36 @@ public class GameTest {
     }
 
 
+    /**
+     * [Requirement 2]
+     * Every monster starts with 0 victory points.
+     */
     @Test
-    public void testVictoryPoints() {
-        assertTrue(true);
+    public void testVictoryPointsSetTo0() {
+        for (Monster mon : game.getAllMonsters()) {
+            assertEquals(0, mon.getStars());
+        }
     }
 
 
+    /**
+     * [Requirement 3]
+     * Every monster starts with 10 health.
+     */
+    @Test
+    public void testLifeSetTo10() {
+        for (Monster mon : game.getAllMonsters()) {
+            assertEquals(0, mon.getStars());
+        }
+    }
 
+
+    /**
+     * [Requirement 4]
+     */
+    @Test
+    public void testStoreCardsShuffled() {
+        StoreCard[] cards = game.shop.getStock();
+
+    }
 }

@@ -1,0 +1,10 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="King of Tokyo: Power Up (server)" type="Application" factoryName="Application" singleton="false">
+    <option name="MAIN_CLASS_NAME" value="king_tokyo_power_up.KingTokyoPowerUp" />
+    <module name="solution" />
+    <option name="PROGRAM_PARAMETERS" value="server" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>

@@ -1,6 +1,7 @@
 package king_tokyo_power_up.game.client;
 
 import king_tokyo_power_up.game.util.Terminal;
+import king_tokyo_power_up.game.util.TerminalTest;
 
 import java.util.Scanner;
 
@@ -11,6 +12,7 @@ public class ClientTest extends GameClient {
      */
     public ClientTest() {
         super(null);
+        terminal = new TerminalTest(null);
     }
 
     /**

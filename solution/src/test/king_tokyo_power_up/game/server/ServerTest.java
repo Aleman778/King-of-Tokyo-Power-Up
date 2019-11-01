@@ -70,7 +70,10 @@ public class ServerTest extends GameServer {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        Thread thread = new Thread(() -> {
+            game.start(joinedPlayers);
+        });
+        thread.start();
         game.exit();
-        game.start(joinedPlayers);
     }
 }

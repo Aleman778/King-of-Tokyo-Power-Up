@@ -85,6 +85,14 @@ public class CardShop {
     }
 
 
+    /**
+     * Get the cards available for purchase.
+     * @return the cards.
+     */
+    public StoreCard[] getStock() {
+        return stock;
+    }
+
     @Override
     public String toString() {
         StringBuilder result = new StringBuilder();

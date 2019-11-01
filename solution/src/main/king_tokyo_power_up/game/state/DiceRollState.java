@@ -36,7 +36,12 @@ public class DiceRollState implements GameState {
     /**
      * Terminal used to communicate with the monster who is rolling.
      */
-    private Terminal terminal;
+    public Terminal terminal;
+
+    /**
+     * The monster that is rolling the dice.
+     */
+    public Monster monster;
 
 
     /**
@@ -58,13 +63,9 @@ public class DiceRollState implements GameState {
      */
     @Override
     public void update(Game game) {
-        diceRoll.rollAll();
-
-        Monster monster = game.getCurrent();
-        monster.notify(game, EventType.DICE_ROLL);
-
+        monster = game.getCurrent();
         terminal = monster.getTerminal();
-        terminal.writeString(getControllsString());
+        rollAll(game);
 
         while (rerolls > 0) {
             reroll(game);
@@ -74,6 +75,16 @@ public class DiceRollState implements GameState {
         DiceResult result = diceRoll.getResult();
         terminal.writeString(result.toString() + "\n");
         game.setState(new ActionState(result));
+    }
+
+
+    /**
+     * Initially rolls all the dice
+     */
+    public void rollAll(Game game) {
+        diceRoll.rollAll();
+        monster.notify(game, EventType.DICE_ROLL);
+        terminal.writeString(getControllsString());
     }
 
 

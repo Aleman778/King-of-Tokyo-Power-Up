@@ -38,17 +38,17 @@ public class ActionState implements GameState {
     /**
      * The current monster performing the action based on the dice result.
      */
-    private Monster monster;
+    public Monster monster;
 
     /**
      * The terminal used to communicate with the current monster.
      */
-    private Terminal terminal;
+    public Terminal terminal;
 
     /**
      * The state of the king_tokyo_power_up.game.
      */
-    private Game game;
+    public Game game;
 
 
     /**

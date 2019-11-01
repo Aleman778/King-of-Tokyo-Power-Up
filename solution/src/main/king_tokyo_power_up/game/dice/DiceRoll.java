@@ -121,16 +121,18 @@ public class DiceRoll {
         String diceIds = "";
         String diceRolls = "";
         for (int i = 0; i < dice.length; i++) {
-            String diceRoll = dice[i].toString();
-            String diceId = "[" + (i + 1) + "]";
-            int spacing = diceRoll.length() - diceId.length();
-            if (spacing > 0) {
-                diceId += Formatting.getSpaces(Math.abs(spacing));
-            } else if (spacing < 0) {
-                diceRoll += Formatting.getSpaces(Math.abs(spacing));
+            if (dice[i] != null) {
+                String diceRoll = dice[i].toString();
+                String diceId = "[" + (i + 1) + "]";
+                int spacing = diceRoll.length() - diceId.length();
+                if (spacing > 0) {
+                    diceId += Formatting.getSpaces(Math.abs(spacing));
+                } else if (spacing < 0) {
+                    diceRoll += Formatting.getSpaces(Math.abs(spacing));
+                }
+                diceIds += diceId + " ";
+                diceRolls += diceRoll + " ";
             }
-            diceIds += diceId + " ";
-            diceRolls += diceRoll + " ";
         }
         return diceIds + "\n" + diceRolls;
     }

@@ -31,17 +31,17 @@ public class ShopState implements GameState {
     /**
      * The state of the king_tokyo_power_up.game.
      */
-    private Game game;
+    public Game game;
 
     /**
      * The current monster playing.
      */
-    private Monster monster;
+    public Monster monster;
 
     /**
      * The terminal to current monster.
      */
-    private Terminal terminal;
+    public Terminal terminal;
 
 
     /**
