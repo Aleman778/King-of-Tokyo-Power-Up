@@ -1,5 +1,3 @@
-solution/.idea/
-solution/out/
+.idea/
+out/
 *.iml
-
-!solution/.idea/
